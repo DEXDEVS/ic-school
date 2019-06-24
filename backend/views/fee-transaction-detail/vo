@@ -1,0 +1,343 @@
+$headTransId = Yii::$app->db->createCommand("SELECT fee_trans_id FROM fee_transaction_head where class_name_id = '$classid' AND session_id = '$sessionid' AND section_id = '$sectionid' AND month = '$month'")->queryAll();
+
+        $transaction = \Yii::$app->db->beginTransaction();
+        try {
+            if(empty($headTransId)){
+                for($i=0; $i<$length; $i++){
+                    $statusUpdate = Yii::$app->db->createCommand("UPDATE fee_transaction_head SET status = 'Added to next month' WHERE std_id = '$studentId[$i]' AND status = 'Unpaid'")->execute();
+                    $voucher = FeeTransactionHead::find()->orderBy(['voucher_no'=> SORT_DESC])->one();
+                    if($voucher == NULL){
+                        $voucherNo = '1001';
+                    } else {
+                        $voucherNo = $voucher['voucher_no']+1;
+                    }
+                    for($z=0; $z<$countMonth; $z++){
+                        if($z == 0){
+                            $totalAmount = $total_amount[$i];
+                        } else {
+                            $amount = ($admission_fee[$i] + $absent_fine[$i] + $activity_fee[$i] + $stationary_expense[$i] + $board_uni_fee[$i] + $exam_fee[$i] + $arrears[$i]);
+                            $totalAmount = ($total_amount[$i] - $amount);
+                        }
+                        $feeHead = Yii::$app->db->createCommand()->insert('fee_transaction_head',[
+                            'class_name_id' => $classid,
+                            'voucher_no' => $voucherNo,
+                            'branch_id' => Yii::$app->user->identity->branch_id,
+                            'session_id'=> $sessionid,
+                            'section_id'=> $sectionid,
+                            'std_id' => $studentId[$i],
+                            'std_name' => $studentName[$i],
+                            'month'=> $months[$z],
+                            'transaction_date' =>  new \yii\db\Expression('NOW()'),
+                            'total_amount'=>  $totalAmount, 
+                            'status'=>'unpaid',
+                            'created_by' => Yii::$app->user->identity->id,
+                        ])->execute();
+
+                        $headID = Yii::$app->db->createCommand("SELECT fee_trans_id FROM fee_transaction_head where class_name_id= '$classid' AND session_id = '$sessionid' AND section_id = '$sectionid' AND month = '$months[$z]'")->queryAll();
+
+                        $headId = $headID[$i]['fee_trans_id'];
+                        for($j=0;$j<8;$j++){
+                            if($feeType[$j] == 1 && $admission_fee[$i] > 0 && $z == 0){
+                                $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $headId,
+                                'fee_type_id'=> $feeType[$j],
+                                'fee_amount'=> $admission_fee[$i]
+                                ])->execute();
+                                var_dump($feeDetails);
+                            }
+                            if($feeType[$j] == 2 && $tuition_fee[$i] > 0){
+                                $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $headId,
+                                'fee_type_id'=> $feeType[$j],
+                                'fee_amount'=> $tuition_fee[$i], 
+                                ])->execute();
+                            }
+                            if($feeType[$j] == 3 && $absent_fine[$i] > 0 && $z == 0){
+                                $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $headId,
+                                'fee_type_id'=> $feeType[$j],
+                                'fee_amount'=> $absent_fine[$i],
+                                ])->execute();
+                            }
+                            if($feeType[$j] == 4 && $activity_fee[$i] > 0 && $z == 0){
+                                $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $headId,
+                                'fee_type_id'=> $feeType[$j],
+                                'fee_amount'=> $activity_fee[$i], 
+                                ])->execute();
+                            }
+                            if($feeType[$j] == 5 && $stationary_expense[$i] > 0 && $z == 0){
+                                $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $headId,
+                                'fee_type_id'=> $feeType[$j],
+                                'fee_amount'=> $stationary_expense[$i],
+                                ])->execute();
+                            }
+                            if($feeType[$j] == 6 && $board_uni_fee[$i] > 0 && $z == 0){
+                                $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $headId, 
+                                'fee_type_id'=> $feeType[$j],
+                                'fee_amount'=> $board_uni_fee[$i], 
+                                ])->execute();
+                            }
+                            if($feeType[$j] == 7 && $exam_fee[$i] > 0 && $z == 0){
+                                $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $headId, 
+                                'fee_type_id'=> $feeType[$j],
+                                'fee_amount'=> $exam_fee[$i], 
+                                ])->execute();
+                            }
+                            if($feeType[$j] == 8 && $arrears[$i] > 0 && $z == 0){
+                                $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $headId, 
+                                'fee_type_id'=> $feeType[$j],
+                                'fee_amount'=> $arrears[$i], 
+                                ])->execute();
+                            }
+                        }
+                        //end of j for loop
+                    }
+                    //end of z for loop  
+                }
+                //end of i for loop
+                // success alert message...
+                Yii::$app->session->setFlash('success', "You have successfully maintain this class account...!"); 
+                    //return $this->render('./fee-transaction-detail-class-account');
+                 // end of if
+            } else {
+                $transId = $headTransId[0]['fee_trans_id'];
+                for($i=0; $i<$length; $i++){
+                    $feeHead = Yii::$app->db->createCommand()->update('fee_transaction_head', [
+                        'class_name_id' => $classid,
+                        'branch_id' => Yii::$app->user->identity->branch_id,
+                        'session_id'=> $sessionid,
+                        'section_id'=> $sectionid,
+                        'std_id' => $studentId[$i],
+                        'std_name' => $studentName[$i],
+                        'month'=> $month,
+                        'transaction_date' => $date,
+                        'total_amount'=> $total_amount[$i],
+                        'status'=>'unpaid',
+                        'updated_by' => Yii::$app->user->identity->id],
+                        ['fee_trans_id' => $transId+$i]
+                    )->execute();
+                // end of i for loop    
+                }
+                for ($j=0; $j < $length; $j++) { 
+                    $id = $transId+$j;
+                    $detailID = Yii::$app->db->createCommand("SELECT fee_trans_detail_id, fee_type_id FROM fee_transaction_detail WHERE fee_trans_detail_head_id = '$id'")->queryAll();
+                    $updateCount = count($detailID);
+                    // adjust feeType Array with index....
+                    for ($x=0; $x < $updateCount ; $x++) {     
+                        $updatedFeeTypeId = $detailID[$x]['fee_type_id'];
+                        $updatedArray[$x] = $updatedFeeTypeId;
+                    }
+                    for ($y=$updateCount; $y < 8 ; $y++) { 
+                        $updatedArray[$y] = 0;
+                    }
+                    for ($x=0; $x < $updateCount ; $x++) {     
+                        $updatedTransId = $detailID[$x]['fee_trans_detail_id'];
+                        $transArray[$x] = $updatedTransId;
+                    }
+                    for ($y=$updateCount; $y < 8 ; $y++) { 
+                        $transArray[$y] = 0;
+                    }
+                    $updateArray    = Array(0,0,0,0,0,0,0,0);
+                    $detailId    = Array(0,0,0,0,0,0,0,0);
+                    for ($z=0; $z<8; $z++) {  
+                        //use length here
+                        if ($updatedArray[$z] == $feeType[$z] ) {
+                            $updateArray[$z] = $feeType[$z];
+                            $detailId[$z] = $transArray[$z];
+                            continue;
+                        }
+                        else {
+                            for ($a=0; $a<8; $a++) {
+                                if($updatedArray[$z] == $feeType[$a]) {
+                                    $updateArray[$a] = $feeType[$a];
+                                    $detailId[$a] = $transArray[$z];
+                                    break;
+                                }
+                            } 
+                        }
+                    }
+                    for($m=0; $m < 8; $m++){
+                        //admission_fee ..... 
+                        if($feeType[$m] == 1){
+                            if($updateArray[$m] == $feeType[$m] && $admission_fee[$j] >= 0){
+                                $feeDetails = Yii::$app->db->createCommand()->update('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $id,
+                                'fee_type_id'=> 1,
+                                'fee_amount'=> $admission_fee[$j]],
+                                ['fee_trans_detail_id' => $detailId[$m]] 
+                                )->execute();
+                            }
+                            else {
+                                if ($admission_fee[$j] > 0){
+                                    $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                    'fee_trans_detail_head_id' => $id,
+                                    'fee_type_id'=> 1,
+                                    'fee_amount'=> $admission_fee[$j], 
+                                    ])->execute();
+                                }
+                            }
+                        }
+                        // tuition_fee ....
+                        if($feeType[$m] == 2){
+                            if( $updateArray[$m] == $feeType[$m] && $tuition_fee[$j] >= 0){
+                                $feeDetails = Yii::$app->db->createCommand()->update('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $id,
+                                'fee_type_id'=> 2,
+                                'fee_amount'=> $tuition_fee[$j]],
+                                ['fee_trans_detail_id' => $detailId[$m]] 
+                                )->execute();
+                            }
+                            else {
+                                if($tuition_fee[$j] > 0){
+                                    $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                    'fee_trans_detail_head_id' => $id,
+                                    'fee_type_id'=> 2,
+                                    'fee_amount'=> $tuition_fee[$j], 
+                                    ])->execute();
+                                }
+                            }
+                        }
+                        // late fee fine ....
+                        if($feeType[$m] == 3){ 
+                            if($updateArray[$m] == $feeType[$m] && $absent_fine[$j] >= 0){
+                                $feeDetails = Yii::$app->db->createCommand()->update('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $id,
+                                'fee_type_id'=> 3,
+                                'fee_amount'=> $absent_fine[$j]],
+                                ['fee_trans_detail_id' => $detailId[$m]] 
+                                )->execute();
+                            }       
+                            else {
+                                if($absent_fine[$j] > 0){
+                                    $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                    'fee_trans_detail_head_id' => $id,
+                                    'fee_type_id'=> 3,
+                                    'fee_amount'=> $absent_fine[$j],
+                                    ])->execute();
+                                }
+                            }
+                        }
+                        // activity_fee ....
+                        if($feeType[$m] == 4){
+                            if( $updateArray[$m] == $feeType[$m] && $activity_fee[$j] >= 0){
+                                $feeDetails = Yii::$app->db->createCommand()->update('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $id,
+                                'fee_type_id'=> 4,
+                                'fee_amount'=> $activity_fee[$j]],
+                                ['fee_trans_detail_id' => $detailId[$m]] 
+                                )->execute();
+                            }      
+                            else {
+                                if($activity_fee[$j] > 0){
+                                    $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                    'fee_trans_detail_head_id' => $id,
+                                    'fee_type_id'=> 4,
+                                    'fee_amount'=> $activity_fee[$j], 
+                                    ])->execute();
+                                }
+                            }
+                        }
+                        // stationary_expense ....
+                        if($feeType[$m] == 5){
+                            if($updateArray[$m] == $feeType[$m] && $stationary_expense[$j] >= 0){
+                                $feeDetails = Yii::$app->db->createCommand()->update('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $id,
+                                'fee_type_id'=> 5,
+                                'fee_amount'=> $stationary_expense[$j]],
+                                ['fee_trans_detail_id' => $detailId[$m]] 
+                                )->execute();
+                            }
+                            else {
+                                if($stationary_expense[$j] > 0){
+                                    $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                    'fee_trans_detail_head_id' => $id,
+                                    'fee_type_id'=> 5,
+                                    'fee_amount'=> $stationary_expense[$j],
+                                    ])->execute();
+                                }
+                            }
+                        }
+                        // board_uni_fee ....
+                        if($feeType[$m] == 6){
+                            if($updateArray[$m] == $feeType[$m] && $board_uni_fee[$j] >= 0){
+                                $feeDetails = Yii::$app->db->createCommand()->update('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $id,
+                                'fee_type_id'=> 6,
+                                'fee_amount'=> $board_uni_fee[$j]],
+                                ['fee_trans_detail_id' => $detailId[$m]] 
+                                )->execute();
+                            }      
+                            else {
+                                if($board_uni_fee[$j] > 0){
+                                    $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                    'fee_trans_detail_head_id' => $id, 
+                                    'fee_type_id'=> 6,
+                                    'fee_amount'=> $board_uni_fee[$j], 
+                                    ])->execute();
+                                }
+                            }   
+                        }
+                        // exam_fee ....
+                        if($feeType[$m] == 7){
+                            if($updateArray[$m] == $feeType[$m] && $exam_fee[$j] >= 0){
+                                $feeDetails = Yii::$app->db->createCommand()->update('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $id,
+                                'fee_type_id'=> 7,
+                                'fee_amount'=> $exam_fee[$j]],
+                                ['fee_trans_detail_id' => $detailId[$m]] 
+                                )->execute();
+                            }      
+                            else {
+                                if($exam_fee[$j] > 0){
+                                    $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                    'fee_trans_detail_head_id' => $id, 
+                                    'fee_type_id'=> 7,
+                                    'fee_amount'=> $exam_fee[$j], 
+                                    ])->execute();
+                                }
+                            }   
+                        } 
+                        // arrears ....
+                        if($feeType[$m] == 8){
+                            if($updateArray[$m] == $feeType[$m] && $arrears[$j] >= 0){
+                                $feeDetails = Yii::$app->db->createCommand()->update('fee_transaction_detail',[
+                                'fee_trans_detail_head_id' => $id,
+                                'fee_type_id'=> 8,
+                                'fee_amount'=> $arrears[$j]],
+                                ['fee_trans_detail_id' => $detailId[$m]] 
+                                )->execute();
+                            }      
+                            else {
+                                if($arrears[$j] > 0){
+                                    $feeDetails = Yii::$app->db->createCommand()->insert('fee_transaction_detail',[
+                                    'fee_trans_detail_head_id' => $id, 
+                                    'fee_type_id'=> 8,
+                                    'fee_amount'=> $arrears[$j], 
+                                    ])->execute();
+                                }
+                            }   
+                        }              
+                    //end of  m for loop
+                    }
+                // end of j loop    
+                }       
+                //return $this->render('./fee-transaction-detail-class-account');  
+            // end of else 
+            Yii::$app->session->setFlash('warning', "You have successfully update this class account...!");
+            }
+            $transaction->commit();
+             
+            //return $this->redirect(['./class-account']);
+        } catch (Exception $e) {
+            //$transaction->rollBack();
+            Yii::$app->session->setFlash('error', "Transaction Failed, Tray Again...!");
+            echo $e."<br>"; 
+        }
+
+        ///////////////////////////////////////////////////////////////////////////
+         
