@@ -133,15 +133,15 @@ class StdRegistrationController extends Controller
                         ['std_id' => $std_id]
                     )->execute();
 
-                    // $user = new User();
-                    // $user->branch_id = $branch_id;
-                    // $user->username = $model->std_b_form;
-                    // $user->email = $model->std_email;
-                    // $user->user_photo = $model->std_photo;
-                    // $user->user_type = 'Student';
-                    // $user->setPassword($stdPassword);
-                    // $user->generateAuthKey();
-                    // $user->save();
+                    $user = new User();
+                    $user->branch_id = $branch_id;
+                    $user->username = $model->std_b_form;
+                    $user->email = $model->std_email;
+                    $user->user_photo = $model->std_photo;
+                    $user->user_type = 'Student';
+                    $user->setPassword($stdPassword);
+                    $user->generateAuthKey();
+                    $user->save();
 
                     // stdGuardianInfo...
                     $prntPassword = rand(1000, 10000);
@@ -153,18 +153,18 @@ class StdRegistrationController extends Controller
                     $stdGuardianInfo->updated_at = '0';
                     $stdGuardianInfo->save();
                     // userCNIC...
-                    // $userCNIC = Yii::$app->db->createCommand("SELECT id FROM user WHERE username = '$stdGuardianInfo->guardian_cnic'")->queryAll();
-                    // if(empty($userCNIC)){
-                    //     $user = new User();
-                    //     $user->branch_id = $branch_id;
-                    //     $user->username = $stdGuardianInfo->guardian_cnic;
-                    //     $user->email = $stdGuardianInfo->guardian_email;
-                    //     $user->user_photo = $model->std_photo;
-                    //     $user->user_type = 'Parent';
-                    //     $user->setPassword($prntPassword);
-                    //     $user->generateAuthKey();
-                    //     $user->save();
-                    // }
+                    $userCNIC = Yii::$app->db->createCommand("SELECT id FROM user WHERE username = '$stdGuardianInfo->guardian_cnic'")->queryAll();
+                    if(empty($userCNIC)){
+                        $user = new User();
+                        $user->branch_id = $branch_id;
+                        $user->username = $stdGuardianInfo->guardian_cnic;
+                        $user->email = $stdGuardianInfo->guardian_email;
+                        $user->user_photo = $model->std_photo;
+                        $user->user_type = 'Parent';
+                        $user->setPassword($prntPassword);
+                        $user->generateAuthKey();
+                        $user->save();
+                    }
                     // stdIceInfo...
                     $stdIceInfo->std_id = $model->std_id;
                     $stdIceInfo->created_by = Yii::$app->user->identity->id; 
