@@ -4,7 +4,7 @@
  * @package   yii2-grid
  * @author    Kartik Visweswaran <kartikv2@gmail.com>
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2019
- * @version   3.3.0
+ * @version   3.3.2
  */
 
 namespace kartik\grid;
@@ -118,8 +118,24 @@ trait ColumnTrait
      * @var array HTML attributes for the page summary cell. The following special attributes are available:
      * - `prepend`: _string_, a prefix string that will be prepended before the pageSummary content
      * - `append`: _string_, a suffix string that will be appended after the pageSummary content
+     * - `colspan`: _int_, the column count that will be merged.
+     * - `data-colspan-dir`: _string_, whether `ltr` or `rtl`. Defaults to `ltr`. If this is set to `ltr` the columns
+     *    will be merged starting from this column to the right (i.e. left to right). If this is set to `rtl`, the columns
+     *    will be merged starting from this column to the left (i.e. right to left).
      */
     public $pageSummaryOptions;
+
+    /**
+     * @var string|array|Closure in which format should the value of each data model be displayed as (e.g. `"raw"`, `"text"`, `"html"`,
+     * `['date', 'php:Y-m-d']`). Supported formats are determined by the [[GridView::formatter|formatter]] used by
+     * the [[GridView]]. Default format is "text" which will format the value as an HTML-encoded plain text when
+     * [[\yii\i18n\Formatter]] is used as the [[GridView::$formatter|formatter]] of the GridView.
+     *
+     * If this is not set - it will default to the `format` setting for the Column.
+     *
+     * @see \yii\i18n\Formatter::format()
+     */
+    public $pageSummaryFormat;
 
     /**
      * @var string the horizontal alignment of each column. Should be one of [[GridView::ALIGN_LEFT]],
@@ -319,7 +335,8 @@ trait ColumnTrait
         }
         $content = $this->getPageSummaryCellContent();
         if ($this->pageSummary === true) {
-            return $this->grid->formatter->format($content, $this->format);
+            $format = isset($this->pageSummaryFormat) ? $this->pageSummaryFormat : $this->format;
+            return $this->grid->formatter->format($content, $format);
         }
         return ($content === null) ? $this->grid->emptyCell : $content;
     }
@@ -563,7 +580,7 @@ trait ColumnTrait
         if (!$this->grid->pjax || empty($script)) {
             return;
         }
-        $cont = 'jQuery("#' . $this->grid->pjaxSettings['options']['id'] . '")';
+        $cont = 'jQuery("#' . $this->grid->getPjaxContainerId() . '")';
         $view = $this->grid->getView();
         $ev = 'pjax:complete.' . hash('crc32', $script);
         $view->registerJs("{$cont}.off('{$ev}').on('{$ev}', function(){ {$script} });");

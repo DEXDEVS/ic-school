@@ -24,7 +24,6 @@ export {
   flexibleCompare,
   computeVisibleDayRange,
   refineProps,
-  freezeRaw,
   matchCellWidths, uncompensateScroll, compensateScroll, subtractInnerElHeight,
   isMultiDayRange,
   distributeHeight,
@@ -55,8 +54,7 @@ export {
   translateRect
 } from './util/geom'
 
-export { mapHash, filterHash } from './util/object'
-export { isObjectsSimilar, isValuesSimilar } from './util/object-similarity'
+export { mapHash, filterHash, isPropsEqual } from './util/object'
 
 export {
   findElements,

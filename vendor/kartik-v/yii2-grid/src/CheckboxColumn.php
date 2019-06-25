@@ -4,7 +4,7 @@
  * @package   yii2-grid
  * @author    Kartik Visweswaran <kartikv2@gmail.com>
  * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2019
- * @version   3.3.0
+ * @version   3.3.2
  */
 
 namespace kartik\grid;
@@ -42,7 +42,7 @@ class CheckboxColumn extends YiiCheckboxColumn
     public $rowHighlight = true;
 
     /**
-     * @var string highlight CSS class to be applied for highlighting the row. Defaults to [[GridView::TYPE_SUCCESS]].
+     * @var string highlight CSS class to be applied for highlighting the row. Defaults to [[GridView::TYPE_DANGER]].
      */
     public $rowSelectedClass;
 
@@ -69,7 +69,7 @@ class CheckboxColumn extends YiiCheckboxColumn
             'width' => '50px'
         ]);
         if (!isset($this->rowSelectedClass)) {
-            $this->rowSelectedClass = $this->grid->getCssClass(GridView::BS_TABLE_SUCCESS);
+            $this->rowSelectedClass = $this->grid->getCssClass(GridView::BS_TABLE_DANGER);
         }
         $id = $this->grid->options['id'];
         $view = $this->grid->getView();
@@ -105,7 +105,9 @@ class CheckboxColumn extends YiiCheckboxColumn
         $this->initPjax($this->_clientScript);
         if ($this->attribute !== null) {
             $this->name = Html::getInputName($model, "[{$index}]{$this->attribute}");
-            $this->checkboxOptions['value'] = Html::getAttributeValue($model, $this->attribute);
+             if (!$this->checkboxOptions instanceof Closure) {
+                $this->checkboxOptions['value'] = Html::getAttributeValue($model, $this->attribute);
+             }
         }
         return Html::tag('td', $this->renderDataCellContent($model, $key, $index), $options);
     }
