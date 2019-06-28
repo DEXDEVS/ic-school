@@ -1,7 +1,7 @@
 <?php 
 
     $userID = Yii::$app->user->id;
-    $user = Yii::$app->db->createCommand("SELECT user_photo FROM user WHERE id = $userID")->queryAll();
+    $user = Yii::$app->db->createCommand("SELECT user_photo FROM user WHERE id = '$userID'")->queryAll();
     // Student Photo...
     $userPhoto = $user[0]['user_photo'];
 ?>
@@ -342,7 +342,16 @@
                     // Alumni start...
                     ['label' => 'Alumni', 'icon' => 'recycle', 'url' => ["./premium-version"],],
                     // ------------------------------------------------
-                    // Alumni close...                    
+                    // Alumni close... 
+                    // ------------------------------------------------
+                    // Backup start...
+                    // ------------------------------------------------                   
+
+                    ['label' => 'Backup', 'icon' => 'recycle', 'url' => ["./backup"],],
+                    // ------------------------------------------------
+                    // Backup start...
+                    // ------------------------------------------------                   
+
                      
                     // ------------------------------------------------
                     

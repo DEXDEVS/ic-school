@@ -26,7 +26,8 @@
         "kartik-v/yii2-export": "*",
         "wbraganca/yii2-dynamicform": "*",
         "kartik-v/yii2-widget-datepicker": "@dev",
-        "kartik-v/yii2-widget-timepicker": "*"
+        "kartik-v/yii2-widget-timepicker": "*",
+        "spanjeta/yii2-backup": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

@@ -96,6 +96,10 @@ class ComposerStaticInit0c51b51caa7b76089a6868de9dd1f3ad
         array (
             'wbraganca\\dynamicform\\' => 22,
         ),
+        's' => 
+        array (
+            'spanjeta\\modules\\backup\\' => 24,
+        ),
         'r' => 
         array (
             'rmrevin\\yii\\fontawesome\\' => 24,
@@ -237,6 +241,10 @@ class ComposerStaticInit0c51b51caa7b76089a6868de9dd1f3ad
         'wbraganca\\dynamicform\\' => 
         array (
             0 => __DIR__ . '/..' . '/wbraganca/yii2-dynamicform',
+        ),
+        'spanjeta\\modules\\backup\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spanjeta/yii2-backup',
         ),
         'rmrevin\\yii\\fontawesome\\' => 
         array (
@@ -665,7 +673,7 @@ class ComposerStaticInit0c51b51caa7b76089a6868de9dd1f3ad
         'PHPUnit\\Util\\Configuration' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Configuration.php',
         'PHPUnit\\Util\\ConfigurationGenerator' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/ConfigurationGenerator.php',
         'PHPUnit\\Util\\ErrorHandler' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/ErrorHandler.php',
-        'PHPUnit\\Util\\FileLoader' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/FileLoader.php',
+        'PHPUnit\\Util\\FileLoader' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Fileloader.php',
         'PHPUnit\\Util\\Filesystem' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Filesystem.php',
         'PHPUnit\\Util\\Filter' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Filter.php',
         'PHPUnit\\Util\\Getopt' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Getopt.php',

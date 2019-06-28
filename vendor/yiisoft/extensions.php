@@ -238,4 +238,13 @@ return array (
       '@kartik/select2' => $vendorDir . '/kartik-v/yii2-widget-select2/src',
     ),
   ),
+  'spanjeta/yii2-backup' => 
+  array (
+    'name' => 'spanjeta/yii2-backup',
+    'version' => '2.2.0.0',
+    'alias' => 
+    array (
+      '@spanjeta/modules/backup' => $vendorDir . '/spanjeta/yii2-backup',
+    ),
+  ),
 );

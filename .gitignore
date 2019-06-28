@@ -48,3 +48,6 @@ phpunit.phar
 
 # vagrant runtime
 /.vagrant
+
+# app.log
+backend/runtime
