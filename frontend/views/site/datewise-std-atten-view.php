@@ -7,12 +7,11 @@
 <body>
 
     <?php 
-echo "kjhgfd";
+
     if(isset($_POST["submit"])){
 
-        $sub_id         = $_GET["sub_id"];
-        $class_id       = $_GET["class_id"];
-        $emp_id         = $_GET["emp_id"];
+        $class_id       = $_GET["class_head_id"];
+        //$emp_id         = $_GET["teacher_id"];
         $date           = $_POST["date"];
         $studentId      = $_POST["studentId"];
         $classnameid    = $_POST["classnameid"];

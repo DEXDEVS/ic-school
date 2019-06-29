@@ -6,16 +6,16 @@
 <body>
 
     <?php 
-echo "kjhgfd";
+
      if (isset($_POST['submit'])) {
             $startDate = $_POST["start_date"];
             $endDate = $_POST["end_date"];
         }
 
-    if(isset($_GET['sub_id'])){
-        $sub_id = $_GET['sub_id'];  
-        $class_id = $_GET['class_id'];
-        $emp_id = $_GET['emp_id'];   
+    if(isset($_GET["teacher_id"])){ 
+        $teacher_id = $_GET["teacher_id"];
+        $branch_id = $_GET["branch_id"];
+        $class_id = $_GET["class_head_id"];   
 
         $branch_id = Yii::$app->user->identity->branch_id;
         $students = Yii::$app->db->createCommand("SELECT seh.std_enroll_head_name,sed.std_enroll_detail_std_id,sed.std_enroll_detail_std_name, sed.std_roll_no
@@ -25,7 +25,6 @@ echo "kjhgfd";
         WHERE sed.std_enroll_detail_head_id = '$class_id' AND seh.branch_id = '$branch_id'")->queryAll();
     
 	    $countstd = count($students);
-	    $subName = Yii::$app->db->createCommand("SELECT subject_name FROM subjects WHERE subject_id = '$sub_id'")->queryAll();
 
 	    $classDetail = Yii::$app->db->createCommand("SELECT DISTINCT seh.class_name_id, seh.session_id, seh.section_id FROM std_enrollment_head as seh INNER JOIN teacher_subject_assign_detail as d ON d.class_id = seh.std_enroll_head_id WHERE d.class_id = '$class_id' AND seh.branch_id = '$branch_id'")->queryAll();
 	    $classnameid = $classDetail[0]['class_name_id'];
@@ -36,7 +35,7 @@ echo "kjhgfd";
 <div class="container-fluid">
     <div class="row">
             <div class="col-md-3 col-md-offset-9">
-                    <a href="./view-attendance?sub_id=<?php echo $sub_id;?>&class_id=<?php echo $class_id;?>&emp_id=<?php echo $emp_id;?>"  style="float: right; margin-right:2px;background-color:#5CB85C;color: white;padding:3px;border-radius:5px;"><i class="glyphicon glyphicon-backward"></i> Back</a>
+                    <a href="./mark-attendance"  style="float: right; margin-right:2px;background-color:#5CB85C;color: white;padding:3px;border-radius:5px;"><i class="glyphicon glyphicon-backward"></i> Back</a>
             </div>
     </div><br>
     <div class="row">
@@ -77,12 +76,6 @@ echo "kjhgfd";
                             <?php echo $students[0]['std_enroll_head_name']; ?>
                         </p>
                     </li><br>
-                    <li style="list-style-type: none;">
-                        <b>Subject:</b>
-                        <p>
-                            <?php echo $subName[0]['subject_name']; ?>
-                        </p>
-                    </li><hr style="border-color:#d0f2d0;"><br>
                 </div>
             </div>
         </div>
@@ -94,12 +87,12 @@ echo "kjhgfd";
                 <div class="box-body">
                     <div class="row">
         <div class="col-md-12">
-            <form method="POST" action="daterangewise-class-attendance">
+            <form method="POST" action="daterangewise-class-atten-view">
                 <table class="table table-hover">
                     <thead>
                         <?php 
                         $stdId = $students[0]['std_enroll_detail_std_id'];
-                        $atten = Yii::$app->db->createCommand("SELECT CAST(date AS DATE),att.status FROM std_attendance as att WHERE att.branch_id = '$branch_id' AND att.teacher_id = '$emp_id' AND att.class_name_id = '$classnameid' AND att.session_id = '$sessionid' AND att.section_id = '$sectionid' AND att.subject_id = '$sub_id' AND att.student_id = '$stdId' AND CAST(date AS DATE) >= '$startDate' AND CAST(date AS DATE) <= '$endDate'")->queryAll(); 
+                        $atten = Yii::$app->db->createCommand("SELECT CAST(date AS DATE),att.attendance FROM std_atten_incharge as att WHERE att.branch_id = '$branch_id' AND att.teacher_id = '$teacher_id' AND att.class_name_id = '$classnameid' AND att.session_id = '$sessionid' AND att.section_id = '$sectionid' AND att.std_id = '$stdId' AND CAST(date AS DATE) >= '$startDate' AND CAST(date AS DATE) <= '$endDate'")->queryAll(); 
                         $count = count($atten);
                          ?>
                         <tr style="background-color:#d0f2d0; ">
@@ -128,15 +121,14 @@ echo "kjhgfd";
                             <td><?php echo $students[$i]['std_enroll_detail_std_name'];?></td>
                                 <?php 
                                 $stdId = $students[$i]['std_enroll_detail_std_id'];
-    					        $atten = Yii::$app->db->createCommand("SELECT CAST(date AS DATE),att.status FROM std_attendance as att WHERE att.teacher_id = '$emp_id' AND att.class_name_id = '$classnameid' AND att.session_id = '$sessionid' AND att.section_id = '$sectionid' AND att.subject_id = '$sub_id' AND att.student_id = '$stdId' AND CAST(date AS DATE) >= '$startDate' AND CAST(date AS DATE) <= '$endDate'")->queryAll();
-
+    					        
                                 for ($j=0; $j <$count ; $j++) { ?>
                             <td>
                                 <?php 
                                     if(empty($atten)){
                                         echo 'Not Marked';
                                     } else {
-                                        echo $atten[$j]['status']; 
+                                        echo $atten[$j]['attendance']; 
                                     }?>
                             </td>
                             <?php } ?>

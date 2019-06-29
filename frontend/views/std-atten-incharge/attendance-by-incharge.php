@@ -63,20 +63,20 @@
                     				</select>
                                 </div>
                         	</div>
-                        	<div class="col-md-4">
-                                <div class="form-group">
-                            		<label>Current Date</label>
-                                    <input type="date" class="form-control" name="date" required="required">
-                                </div>
-                        	</div>
                         	<div class="col-md-2">
                                 <div class="form-group">
-                                    <label></label>
-                                    <button type="submit" name="submit" class="btn btn-success form-control" style="margin-top: -25px;">
+                                    <button type="submit" name="take-attendance" class="btn btn-success form-control" style="margin-top: 25px;">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i>    
                                     <b>Take Attendance</b></button>
                                 </div> 
                         	</div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <button type="submit" name="view-attendance" class="btn btn-success form-control" style="margin-top: 25px;">
+                                    <i class="fa fa-sign-in" aria-hidden="true"></i>    
+                                    <b>View Attendance</b></button>
+                                </div> 
+                            </div>
                         </div> <!-- .row  -->
                         <input type="hidden" name="branch_id" value="<?php echo $branch_id; ?>">
                         <input type="hidden" name="teacherHeadId" value="<?php echo $teacherHeadId; ?>">
