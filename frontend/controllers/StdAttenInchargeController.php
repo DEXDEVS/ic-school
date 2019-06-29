@@ -3,8 +3,8 @@
 namespace frontend\controllers;
 
 use Yii;
-use common\models\EmpLeave;
-use common\models\EmpLeaveSearch;
+use common\models\StdAttenIncharge;
+use common\models\StdAttenInchargeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,9 +13,9 @@ use yii\helpers\Html;
 use yii\filters\AccessControl;
 
 /**
- * EmpLeaveController implements the CRUD actions for EmpLeave model.
+ * StdAttenInchargeController implements the CRUD actions for StdAttenIncharge model.
  */
-class EmpLeaveController extends Controller
+class StdAttenInchargeController extends Controller
 {
     /**
      * @inheritdoc
@@ -31,7 +31,7 @@ class EmpLeaveController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete', 'bulk-delete','fetch-days-count'],
+                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete', 'bulk-delete','attendance-by-incharge','mark-attendance'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -47,19 +47,29 @@ class EmpLeaveController extends Controller
         ];
     }
 
-
-
-    public function actionFetchDaysCount()
-    { 
-        return $this->render('fetch-days-count');
-    }
     /**
-     * Lists all EmpLeave models.
+     * Lists all StdAttenIncharge models.
      * @return mixed
      */
+
+    public function actionAttendanceByIncharge()
+    { 
+        return $this->render('attendance-by-incharge');
+    }
+
+    public function actionMarkAttendance()
+    { 
+        return $this->render('mark-attendance');
+    }
+
+    public function beforeAction($action) {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
+    
     public function actionIndex()
     {    
-        $searchModel = new EmpLeaveSearch();
+        $searchModel = new StdAttenInchargeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -70,7 +80,7 @@ class EmpLeaveController extends Controller
 
 
     /**
-     * Displays a single EmpLeave model.
+     * Displays a single StdAttenIncharge model.
      * @param integer $id
      * @return mixed
      */
@@ -80,7 +90,7 @@ class EmpLeaveController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "View Leave",
+                    'title'=> "StdAttenIncharge #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
@@ -95,7 +105,7 @@ class EmpLeaveController extends Controller
     }
 
     /**
-     * Creates a new EmpLeave model.
+     * Creates a new StdAttenIncharge model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -103,7 +113,7 @@ class EmpLeaveController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new EmpLeave();  
+        $model = new StdAttenIncharge();  
 
         if($request->isAjax){
             /*
@@ -112,7 +122,7 @@ class EmpLeaveController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Create new EmpLeave",
+                    'title'=> "Create new StdAttenIncharge",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -120,31 +130,18 @@ class EmpLeaveController extends Controller
                                 Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
-            }else if($model->load($request->post())){
-                $branch_id = Yii::$app->user->identity->branch_id;
-                $userCnic = Yii::$app->user->identity->username;
-                $empName = Yii::$app->db->createCommand("SELECT emp.emp_id FROM emp_info as emp WHERE emp.emp_cnic = '$userCnic'")->queryAll();
-                
-                    $model->branch_id = $branch_id;
-                    $model->emp_id = $empName[0]['emp_id'];
-                    $model->applying_date = Yii::$app->formatter->asDate('now', 'yyyy-MM-dd');
-                    $model->status = "Pending";
-                    $model->created_by = Yii::$app->user->identity->id; 
-                    $model->created_at = new \yii\db\Expression('NOW()');
-                    $model->updated_by = '0';
-                    $model->updated_at = '0'; 
-                    $model->save();
+            }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new EmpLeave",
-                    'content'=>'<span class="text-success">Create EmpLeave success</span>',
+                    'title'=> "Create new StdAttenIncharge",
+                    'content'=>'<span class="text-success">Create StdAttenIncharge success</span>',
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
                 ];         
             }else{           
                 return [
-                    'title'=> "Create new EmpLeave",
+                    'title'=> "Create new StdAttenIncharge",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -158,7 +155,7 @@ class EmpLeaveController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->app_id]);
+                return $this->redirect(['view', 'id' => $model->atten_id]);
             } else {
                 return $this->render('create', [
                     'model' => $model,
@@ -169,7 +166,7 @@ class EmpLeaveController extends Controller
     }
 
     /**
-     * Updates an existing EmpLeave model.
+     * Updates an existing StdAttenIncharge model.
      * For ajax request will return json object
      * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -187,22 +184,17 @@ class EmpLeaveController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Update Leave",
+                    'title'=> "Update StdAttenIncharge #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                                 Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
-            }else if($model->load($request->post())){
-                $model->updated_by = Yii::$app->user->identity->id;
-                    $model->updated_at = new \yii\db\Expression('NOW()');
-                    $model->created_by = $model->created_by;
-                    $model->created_at = $model->created_at;
-                    $model->save();
+            }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "EmpLeave #".$id,
+                    'title'=> "StdAttenIncharge #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $model,
                     ]),
@@ -211,7 +203,7 @@ class EmpLeaveController extends Controller
                 ];    
             }else{
                  return [
-                    'title'=> "Update EmpLeave #".$id,
+                    'title'=> "Update StdAttenIncharge #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -224,7 +216,7 @@ class EmpLeaveController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->app_id]);
+                return $this->redirect(['view', 'id' => $model->atten_id]);
             } else {
                 return $this->render('update', [
                     'model' => $model,
@@ -234,7 +226,7 @@ class EmpLeaveController extends Controller
     }
 
     /**
-     * Delete an existing EmpLeave model.
+     * Delete an existing StdAttenIncharge model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -262,7 +254,7 @@ class EmpLeaveController extends Controller
     }
 
      /**
-     * Delete multiple existing EmpLeave model.
+     * Delete multiple existing StdAttenIncharge model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -293,15 +285,15 @@ class EmpLeaveController extends Controller
     }
 
     /**
-     * Finds the EmpLeave model based on its primary key value.
+     * Finds the StdAttenIncharge model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return EmpLeave the loaded model
+     * @return StdAttenIncharge the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = EmpLeave::findOne($id)) !== null) {
+        if (($model = StdAttenIncharge::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

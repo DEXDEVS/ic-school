@@ -34,7 +34,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout','signup', 'index','employe-dashboard','employee-portfolio','students-view','students-list','view-classes','view-datesheet','activity-view','list-of-classes','std-profile','std-fee','std-fee-details','std-exams','std-exam-schedule','std-exam-result','children', 'executive-portal', 'income-expense', 'balance-sheet', 'std-attendance-report', 'emp-attendance-report', 'premium-version','fee-details','reset-password','user-profile','update-profile','std-remarks'],
+                        'actions' => ['logout','signup', 'index','employe-dashboard','employee-portfolio','students-view','students-list','view-classes','view-datesheet','activity-view','list-of-classes','std-profile','std-fee','std-fee-details','std-exams','std-exam-schedule','std-exam-result','children', 'executive-portal', 'income-expense', 'balance-sheet', 'std-attendance-report', 'emp-attendance-report', 'premium-version','fee-details','reset-password','user-profile','update-profile','std-remarks','view-atten-incharge','datewise-class-attendance','daterangewise-class-attendance','datewise-student-attendance','daterangewise-student-attendance'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -64,6 +64,32 @@ class SiteController extends Controller
     public function beforeAction($action) {
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
+    }
+
+
+    public function actionDatewiseClassAttendance()
+    { 
+        return $this->render('datewise-class-attendance');
+    }
+
+    public function actionDaterangewiseClassAttendance()
+    { 
+        return $this->render('daterangewise-class-attendance');
+    }
+
+    public function actionDatewiseStudentAttendance()
+    { 
+        return $this->render('datewise-student-attendance');
+    }
+
+    public function actionDaterangewiseStudentAttendance()
+    { 
+        return $this->render('daterangewise-student-attendance');
+    }
+    
+    public function actionViewAttenIncharge()
+    { 
+        return $this->render('view-atten-incharge');
     }
 
     public function actionExecutivePortal()

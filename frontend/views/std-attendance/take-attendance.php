@@ -64,40 +64,40 @@ $conn = \Yii::$app->db;
 				</div>
 				<div class="box-body">
 					<form  action = "take-attendance" method="POST">
-    	<div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input type="hidden" name="_csrf" class="form-control" value="<?=Yii::$app->request->getCsrfToken()?>">          
-                </div>    
-            </div>    
-        </div>
-        <div class="row">
-        	<div class="col-md-3">
-                <div class="form-group">
-                	<label>Current Date</label>
-                    <input type="date" class="form-control" name="date" required="required">
-                </div>    
-            </div>  <br>         
-            <div class="col-md-2">
-                <div class="form-group">
-                	<label></label>
-                    <button type="submit" name="submit" class="btn btn-success form-control" style="margin-top: -25px;">
-                    <i class="fa fa-sign-in" aria-hidden="true"></i>	
-                	<b>Take Attendance</b></button>
-                </div>    
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                	<input type="hidden" name="classnameid" value="<?php echo $classnameid; ?>">
-                	<input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
-                	<input type="hidden" name="sessionid" value="<?php echo $sessionid; ?>">
-                	<input type="hidden" name="sectionid" value="<?php echo $sectionid; ?>">
-                	<input type="hidden" name="emp_id" value="<?php echo $emp_id; ?>">
-                	<input type="hidden" name="sub_id" value="<?php echo $sub_id; ?>">
-                </div>    
-        	</div>    
-        </div>
-    </form>
+				    	<div class="row">
+				            <div class="col-md-4">
+				                <div class="form-group">
+				                    <input type="hidden" name="_csrf" class="form-control" value="<?=Yii::$app->request->getCsrfToken()?>">          
+				                </div>    
+				            </div>    
+				        </div>
+				        <div class="row">
+				        	<div class="col-md-3">
+				                <div class="form-group">
+				                	<label>Current Date</label>
+				                    <input type="date" class="form-control" name="date" required="required">
+				                </div>    
+				            </div>  <br>         
+				            <div class="col-md-2">
+				                <div class="form-group">
+				                	<label></label>
+				                    <button type="submit" name="submit" class="btn btn-success form-control" style="margin-top: -25px;">
+				                    <i class="fa fa-sign-in" aria-hidden="true"></i>	
+				                	<b>Take Attendance</b></button>
+				                </div>    
+				            </div>
+				            <div class="col-md-2">
+				                <div class="form-group">
+				                	<input type="hidden" name="classnameid" value="<?php echo $classnameid; ?>">
+				                	<input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
+				                	<input type="hidden" name="sessionid" value="<?php echo $sessionid; ?>">
+				                	<input type="hidden" name="sectionid" value="<?php echo $sectionid; ?>">
+				                	<input type="hidden" name="emp_id" value="<?php echo $emp_id; ?>">
+				                	<input type="hidden" name="sub_id" value="<?php echo $sub_id; ?>">
+				                </div>    
+				        	</div>    
+				        </div>
+				    </form>
 				</div>
 			</div>
 		</div>

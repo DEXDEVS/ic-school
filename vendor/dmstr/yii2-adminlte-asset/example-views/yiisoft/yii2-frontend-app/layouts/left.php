@@ -89,7 +89,8 @@
                         'items' =>[
                              ['label' => 'Activity', 'icon' => 'caret-right', 'url' => ["./list-of-classes"],],
                             ['label' => 'View Classes', 'icon' => 'caret-right', 'url' => ["./view-classes"],],
-                            ['label' => 'Take Attendance', 'icon' => 'caret-right', 'url' => ["./premium-version"],],   
+                            ['label' => 'Take Attendance', 'icon' => 'caret-right', 'url' => ["./attendance-by-incharge"],],
+                            ['label' => 'View Attendance', 'icon' => 'caret-right', 'url' => ["./view-atten-incharge"],],   
                         ]
                     ],
                     // [
