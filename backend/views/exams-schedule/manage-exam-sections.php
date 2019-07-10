@@ -189,7 +189,7 @@ if(isset($_POST['save_datesheet']))
 		$room 				= $_POST["room"];
 		$Invagilator 		= $_POST["Invagilator"];
 		$classSectionID 	= $_POST["classSectionID"];
-echo $subjCount; 	
+	
 	$transection = Yii::$app->db->beginTransaction();
 	try{
 		$inactive = "Inactive";
