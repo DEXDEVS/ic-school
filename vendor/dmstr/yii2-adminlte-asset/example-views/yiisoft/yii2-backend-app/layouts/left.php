@@ -270,7 +270,19 @@
                     // E-Learning  close...
                     // ------------------------------------------------
                     // Time Table Generator start...
-                    ['label' => 'Time Table Generator', 'icon' => 'calendar', 'url' => ["./time-table-head"],],
+                    [
+                        'label' => 'Time Table',
+                        'icon' => 'comments-o',
+                        'url' => '#',
+                        'items' => [
+                            ['label' => 'Generate Time Table', 'icon' => 'caret-right', 'url' => "./time-table",],
+                             ['label' => 'View Time Table', 'icon' => 'caret-right', 'url' => "./time-table-view",],
+                            //['label' => 'SMS Templates', 'icon' => 'caret-right', 'url' => "./sms",],
+                            //['label' => 'Absent Students SMS', 'icon' => 'caret-right', 'url' => "./absent-sms",],
+                            //['label' => 'Custom SMS', 'icon' => 'caret-right', 'url' => "./custom-sms",],
+                            // ['label' => 'Fee Transaction Details', 'icon' => 'caret-right', 'url' => 'index.php?r=fee-transaction-detail',]
+                        ],
+                    ],
                     // ------------------------------------------------
                     // Time Table Generator  close...
                     // ------------------------------------------------

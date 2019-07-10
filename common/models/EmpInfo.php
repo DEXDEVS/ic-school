@@ -71,7 +71,7 @@ class EmpInfo extends \yii\db\ActiveRecord
             [['emp_branch_id', 'emp_dept_id', 'emp_passing_year', 'created_by', 'updated_by'], 'integer'],
             [['emp_marital_status', 'emp_gender', 'emp_status'], 'string'],
             [['created_at', 'updated_at', 'emp_status', 'created_by', 'updated_by', 'degree_scan_copy', 'emp_cv', 'emp_photo', 'emp_salary_type','barcode','emp_fb_ID','emp_date_of_birth',
-               'emp_religion','emp_domicile', 'emp_temp_address'], 'safe'],
+               'emp_religion','emp_domicile', 'emp_temp_address','emp_designation_id'], 'safe'],
             [['emp_reg_no', 'emp_name', 'emp_father_name', 'emp_qualification', 'emp_institute_name','emp_fb_ID'], 'string', 'max' => 50],
             [['emp_cnic', 'emp_contact_no','emp_religion'], 'string', 'max' => 15],
             [['emp_domicile'], 'string', 'max' => 30],
@@ -79,6 +79,7 @@ class EmpInfo extends \yii\db\ActiveRecord
             [['emp_email'], 'string', 'max' => 84],
             [['emp_branch_id'], 'exist', 'skipOnError' => true, 'targetClass' => Branches::className(), 'targetAttribute' => ['emp_branch_id' => 'branch_id']],
             [['emp_dept_id'], 'exist', 'skipOnError' => true, 'targetClass' => Departments::className(), 'targetAttribute' => ['emp_dept_id' => 'department_id']],
+            [['emp_designation_id'], 'exist', 'skipOnError' => true, 'targetClass' => EmpDesignation::className(), 'targetAttribute' => ['emp_designation_id' => 'emp_designation_id']],
             [['emp_photo', 'degree_scan_copy','emp_cv'], 'file', 'extensions' => 'jpg'],
             [['emp_email'],'email'],
             [['reference'],'string', 'max' => 84],
@@ -145,7 +146,11 @@ class EmpInfo extends \yii\db\ActiveRecord
      */
     public function getEmpDesignations()
     {
-        return $this->hasMany(EmpDesignation::className(), ['emp_id' => 'emp_id']);
+        return $this->hasOne(EmpDesignation::className(), ['emp_designation_id' => 'emp_designation_id']);
+    }
+    public function getEmpBranch()
+    {
+        return $this->hasOne(Branches::className(), ['branch_id' => 'emp_branch_id']);
     }
 
     /**
@@ -154,14 +159,6 @@ class EmpInfo extends \yii\db\ActiveRecord
     public function getEmpDocuments()
     {
         return $this->hasMany(EmpDocuments::className(), ['emp_info_id' => 'emp_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getEmpBranch()
-    {
-        return $this->hasOne(Branches::className(), ['branch_id' => 'emp_branch_id']);
     }
 
     /**

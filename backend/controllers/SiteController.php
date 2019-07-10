@@ -32,7 +32,7 @@ class SiteController extends Controller
                     [
                         'actions' => ['logout', 'index', 'system-settings', 
                             'system-configuration', 'students', 'employees', 
-                            'communication', 'fee','premium-version', 'income-expense', 'income-expense-sub', 'fee-statistics-main' , 'fee-statistics-sub','passwords','user-profile', 'request-password-reset'],
+                            'communication', 'fee','premium-version', 'income-expense', 'income-expense-sub', 'fee-statistics-main' , 'fee-statistics-sub','passwords','user-profile', 'request-password-reset','time-table'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -65,6 +65,11 @@ class SiteController extends Controller
      *
      * @return string
      */
+     public function beforeAction($action) {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    } 
+    
     public function actionIndex()
     {
         return $this->render('index');
@@ -76,6 +81,10 @@ class SiteController extends Controller
      public function actionUserProfile()
     {
         return $this->render('user-profile');
+    }
+     public function actionTimeTable()
+    {
+        return $this->render('time-table');
     }
 
     /**

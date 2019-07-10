@@ -82,7 +82,7 @@ class EmpLeaveSearch extends EmpLeave
             $userCnic = Yii::$app->user->identity->username;
             $empId = Yii::$app->db->createCommand("SELECT emp.emp_id FROM emp_info as emp WHERE emp.emp_cnic = '$userCnic'")->queryAll();
 
-            $query = EmpLeave::find()->where(['emp_id'=>$empId[0]['emp_id'], 'branch_id'=>$branch_id]);
+            $query = EmpLeave::find()->where(['emp_leave.emp_id'=>$empId[0]['emp_id'], 'emp_leave.branch_id'=>$branch_id]);
 
             $dataProvider = new ActiveDataProvider([
                 'query' => $query,

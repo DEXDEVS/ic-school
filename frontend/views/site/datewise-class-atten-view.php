@@ -26,11 +26,19 @@
 	    $sectionid = $classDetail[0]['section_id'];
     
 ?>      
-<div class="row">
-    <div class="col-md-3 col-md-offset-9">
-        <a href="./mark-attendance" style="float: right; margin-right:2px;background-color:#5CB85C;color: white;padding:3px;border-radius:5px;"><i class="glyphicon glyphicon-backward"></i> Back</a>
+<form method="POST" action="mark-attendance">
+    <div class="row">
+        <div class="col-md-10">
+            <input type="hidden" name="class_head_id" value="<?php echo $class_id; ?>">
+            <input type="hidden" name="branch_id" value="<?php echo $branch_id; ?>">
+            <input type="hidden" name="teacherHeadId" value="<?php echo $teacher_id; ?>">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" name="view-attendance" style="float: right; margin-right:2px;background-color:#5CB85C;color: white;padding:3px;border-radius:5px;"><i class="glyphicon glyphicon-backward"></i> Back</button>
+        </div>
     </div>
-</div><br>
+</form>
+<br>
 <div class="row">
     <div class="col-md-3">
         <div class="box box-danger"style="border-color:#5CB85C;">
