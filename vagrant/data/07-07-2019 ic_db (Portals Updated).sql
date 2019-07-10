@@ -1,11 +1,11 @@
-us-- phpMyAdmin SQL Dump
--- version 4.7.4
+-- phpMyAdmin SQL Dump
+-- version 4.7.9
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 28, 2019 at 09:31 AM
--- Server version: 10.1.29-MariaDB
--- PHP Version: 7.2.0
+-- Generation Time: Jul 07, 2019 at 07:26 AM
+-- Server version: 10.1.31-MariaDB
+-- PHP Version: 7.2.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `school_db`
+-- Database: `ic_db`
 --
 
 -- --------------------------------------------------------
@@ -1513,7 +1513,8 @@ INSERT INTO `std_academic_info` (`academic_id`, `std_id`, `class_name_id`, `subj
 (6, 6, 11, 14, '6th', 2019, 265641, 1100, 880, 'A', '80%', 'Colony High School', 'unsign', '2019-05-04 05:21:35', '0000-00-00 00:00:00', 4, 0, 1),
 (7, 7, 11, 14, '6th', 2019, 265641, 505, 408, 'A', '81%', 'Colony High School', 'unsign', '2019-05-04 05:23:35', '0000-00-00 00:00:00', 4, 0, 1),
 (8, 8, 11, 14, '6th', 2018, 12345, 505, 408, 'A', '81%', 'Colony High School', 'unsign', '2019-05-04 05:25:31', '0000-00-00 00:00:00', 4, 0, 1),
-(9, 9, 5, 9, '', NULL, NULL, NULL, NULL, '', '', '', 'unsign', '2019-06-25 06:18:04', '0000-00-00 00:00:00', 1, 0, 1);
+(9, 9, 5, 9, '', NULL, NULL, NULL, NULL, '', '', '', 'unsign', '2019-06-25 06:18:04', '0000-00-00 00:00:00', 1, 0, 1),
+(10, 10, 1, 5, '', NULL, NULL, NULL, NULL, 'F', '', '', 'unsign', '2019-07-04 04:14:01', '0000-00-00 00:00:00', 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1547,6 +1548,38 @@ INSERT INTO `std_attendance` (`std_attend_id`, `branch_id`, `teacher_id`, `class
 (6, 5, 3, 1, 4, 3, 2, '2019-05-04 00:00:00', 2, 'P'),
 (7, 5, 3, 1, 4, 3, 2, '2019-05-04 00:00:00', 3, 'P'),
 (8, 5, 3, 1, 4, 3, 2, '2019-05-04 00:00:00', 4, 'P');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `std_atten_incharge`
+--
+
+CREATE TABLE `std_atten_incharge` (
+  `atten_id` int(11) NOT NULL,
+  `branch_id` int(11) NOT NULL,
+  `teacher_id` int(11) NOT NULL,
+  `class_name_id` int(11) NOT NULL,
+  `session_id` int(11) NOT NULL,
+  `section_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `std_id` int(11) NOT NULL,
+  `attendance` varchar(2) NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `updated_by` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `std_atten_incharge`
+--
+
+INSERT INTO `std_atten_incharge` (`atten_id`, `branch_id`, `teacher_id`, `class_name_id`, `session_id`, `section_id`, `date`, `std_id`, `attendance`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+(1, 5, 1, 3, 4, 3, '2019-06-01', 1, 'P', 94, 0, '2019-06-28 14:56:59', '0000-00-00 00:00:00'),
+(2, 5, 1, 3, 4, 3, '2019-06-01', 2, 'P', 94, 0, '2019-06-28 14:56:59', '0000-00-00 00:00:00'),
+(3, 5, 1, 3, 4, 3, '2019-06-01', 3, 'P', 94, 0, '2019-06-28 14:56:59', '0000-00-00 00:00:00'),
+(4, 5, 1, 3, 4, 3, '2019-06-01', 4, 'P', 94, 0, '2019-06-28 14:56:59', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -1682,7 +1715,8 @@ INSERT INTO `std_fee_details` (`fee_id`, `std_id`, `admission_fee`, `addmission_
 (6, 6, 5000, 0, 5000, 0, 3000, '2019-05-04 05:21:35', '0000-00-00 00:00:00', 4, 0, 1),
 (7, 7, 5000, 0, 5000, 0, 3000, '2019-05-04 05:23:35', '0000-00-00 00:00:00', 4, 0, 1),
 (8, 8, 5000, 0, 5000, 0, 3000, '2019-05-04 05:25:31', '0000-00-00 00:00:00', 4, 0, 1),
-(9, 9, 4000, 3000, 1000, 500, 2500, '2019-06-25 06:18:05', '0000-00-00 00:00:00', 1, 0, 1);
+(9, 9, 4000, 3000, 1000, 500, 2500, '2019-06-25 06:18:05', '0000-00-00 00:00:00', 1, 0, 1),
+(10, 10, 3000, 0, 3000, 0, 2000, '2019-07-04 04:14:01', '0000-00-00 00:00:00', 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1779,7 +1813,8 @@ INSERT INTO `std_guardian_info` (`std_guardian_info_id`, `std_id`, `guardian_nam
 (6, 6, 'Iftikhar Ali', 'Father', '31303-9876543-4', '', '+92-300-7976242', '', NULL, '', '', '9056', '2019-05-04 05:21:34', '0000-00-00 00:00:00', 4, 0, 1),
 (7, 7, 'G Mustafa', 'Father', '45102-8765432-3', '', '+92-300-7976242', '', NULL, '', '', '7719', '2019-05-04 05:23:34', '0000-00-00 00:00:00', 4, 0, 1),
 (8, 8, 'Iftikhar Ali', 'Father', '31323-9876543-8', '', '+92-315-8410500', '', NULL, '', '', '1395', '2019-05-04 05:25:30', '0000-00-00 00:00:00', 4, 0, 1),
-(9, 9, 'Shahid Khalil', 'Father', '12345-6789098-7', '', '+92-304-1422508', '', NULL, '', '', '4971', '2019-06-25 06:18:04', '0000-00-00 00:00:00', 1, 0, 1);
+(9, 9, 'Shahid Khalil', 'Father', '12345-6789098-7', '', '+92-304-1422508', '', NULL, '', '', '4971', '2019-06-25 06:18:04', '0000-00-00 00:00:00', 1, 0, 1),
+(10, 10, 'Shahid Khalil', 'Father', '12345-6789098-7', '', '+92-348-876543_', '', NULL, '', '', '9175', '2019-07-04 04:14:01', '0000-00-00 00:00:00', 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1814,7 +1849,8 @@ INSERT INTO `std_ice_info` (`std_ice_id`, `std_id`, `std_ice_name`, `std_ice_rel
 (6, 6, 'Nadia Gull', 'Sister', '', '', '2019-05-04 05:21:35', 4, '0000-00-00 00:00:00', 0, 1),
 (7, 7, 'Aniqa Gull', 'Sister', '', '', '2019-05-04 05:23:35', 4, '0000-00-00 00:00:00', 0, 1),
 (8, 8, 'Nadia Gull', 'Sister', '+92-345-6789009', '', '2019-05-04 05:25:31', 4, '0000-00-00 00:00:00', 0, 1),
-(9, 9, '', '', '', '', '2019-06-25 06:18:04', 1, '0000-00-00 00:00:00', 0, 1);
+(9, 9, '', '', '', '', '2019-06-25 06:18:04', 1, '0000-00-00 00:00:00', 0, 1),
+(10, 10, '', '', '', '', '2019-07-04 04:14:01', 1, '0000-00-00 00:00:00', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1918,7 +1954,8 @@ INSERT INTO `std_personal_info` (`std_id`, `branch_id`, `std_reg_no`, `std_name`
 (6, 6, 'STD-Y19-6', 'Sadia Gull', 'Iftikhar Ali', '+31-304-2632478', '2019-05-04', 'Female', 'RYK', 'RYK', '', 'uploads/Sadia Gull_photo.jpg', '31303-3456789-8', '0000-00-00', '', 'Rahim Yar Khan ', 'Islam', 'Pakistani', 'Rahim Yar Khan', '3776', 'Active', 'Active', '', '2019-05-04 05:21:33', '0000-00-00 00:00:00', 4, 0, 1),
 (7, 6, 'STD-Y19-7', 'Zarwa Mustafa', 'G Mustafa', '+92-334-5678909', '2019-05-04', 'Female', 'RYK', 'RYK', 'zarwa@gmail.com', 'uploads/Zarwa Mustafa_photo.jpg', '31303-8765456-7', '0000-00-00', '', 'Rahim Yar Khan ', 'Islam', 'Pakistani', 'RYK', '3518', 'Active', 'Active', '', '2019-05-04 05:23:33', '0000-00-00 00:00:00', 4, 0, 1),
 (8, 6, 'STD-Y19-8', 'Aniqa Gull', 'Iftikhar Ali', '+92-334-5678998', '2019-05-04', 'Female', 'RYK', 'RYK', 'asra@gmail.com', 'uploads/Aniqa Gull_photo.jpg', '45102-8765435-6', '0000-00-00', '', 'RYK', 'Islam', 'Pakistani', 'Rahim Yar Khan', '6848', 'Active', 'Active', '', '2019-05-04 05:25:29', '0000-00-00 00:00:00', 4, 0, 1),
-(9, 5, 'STD-REG-Y19-09', 'Farhan Shahid', 'Shahid Khalil', '+92-304-1422507', '2010-02-02', '', 'Satellite Town ', 'Satellite Town ', '', 'uploads/Farhan Shahid_photo.jpg', '12345-6789123-4', '2019-06-25', 'Hasmhi', 'RYK', 'Islam', 'Pakistani', 'RYK', '7816', 'Active', 'Active', '', '2019-06-25 06:18:03', '0000-00-00 00:00:00', 1, 0, 1);
+(9, 5, 'STD-REG-Y19-09', 'Farhan Shahid', 'Shahid Khalil', '+92-304-1422507', '2010-02-02', '', 'Satellite Town ', 'Satellite Town ', '', 'uploads/Farhan Shahid_photo.jpg', '12345-6789123-4', '2019-06-25', 'Hasmhi', 'RYK', 'Islam', 'Pakistani', 'RYK', '7816', 'Active', 'Active', '', '2019-06-25 06:18:03', '0000-00-00 00:00:00', 1, 0, 1),
+(10, 5, 'STD-REG-Y19-010', 'Nauman Shahid', 'Shahid Khalil', '+92-345-6432345', '2019-07-03', '', '', '', '', 'uploads/Nauman Shahid_photo.jpg', '31303-2356543-2', '2019-01-29', '', '', '', '', '', '5048', 'Active', 'Active', '', '2019-07-04 04:14:00', '0000-00-00 00:00:00', 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -2214,7 +2251,8 @@ INSERT INTO `user` (`id`, `branch_id`, `first_name`, `last_name`, `username`, `e
 (102, 5, '', '', '12345-6789123-4', '', 'Student', '_iui2wuJ6tZOFmOXJEQUCqtIMBAdCgV8', '$2y$13$6z3duEseVTj4HMSEumZeueIAm1I1WdkeJAvw8n0OLj4/yiVNGtq7u', NULL, 'uploads/Farhan Shahid_photo.jpg', 1, 10, 1561443484, 1561443484),
 (103, 5, '', '', '12345-6789098-7', '', 'Parent', '-141QAZe7KsIFC0qOiIR5rMTz3yBpa8q', '$2y$13$8y9ervakTCd.N8AKSY57JunyuYXZ1ayWjHRolk5YrRxqQDVcij6Ee', NULL, 'uploads/Farhan Shahid_photo.jpg', 1, 10, 1561443484, 1561443484),
 (104, 5, '', '', '31303-0437738-3', 'anasshafqat01@gmail.com', 'Teacher', 'x81FaJ-7fOraeMpC-CpQr6oPmx_9o_dQ', '$2y$13$jFRj307sG1ptFraOUgN1BupdErvUE/VZnh3mPWF3JjoUPCjeOGydi', NULL, 'uploads/Anas Shafqat_emp_photo.jpg', 1, 10, 1561445072, 1561445072),
-(106, 5, '', '', '12345-6789000-0', 'nadia@gmail.com', 'Teacher', 'jjazLozV02xWGyn0GqRQYw-iVhzFQA4d', '$2y$13$vuthKOeV8OZT/6J8AdoIJu2RIbu5Nf0JFDsNtvK0jo9u0sqGj15a.', NULL, 'uploads/Nadia Gull_emp_photo.jpg', 1, 10, 1561455821, 1561455821);
+(106, 5, '', '', '12345-6789000-0', 'nadia@gmail.com', 'Teacher', 'jjazLozV02xWGyn0GqRQYw-iVhzFQA4d', '$2y$13$vuthKOeV8OZT/6J8AdoIJu2RIbu5Nf0JFDsNtvK0jo9u0sqGj15a.', NULL, 'uploads/Nadia Gull_emp_photo.jpg', 1, 10, 1561455821, 1561455821),
+(107, 5, '', '', '31303-2356543-2', '', 'Student', 'KnDnJSGJwNOR3GnqMQ_f1shWbwvPyO2C', '$2y$13$VkYMnrSWvu5ECIIuStsvE.mwjoYU6Wi8LzfjgV4yoK4QM8Z9UXexi', NULL, 'uploads/Nauman Shahid_photo.jpg', 1, 10, 1562213641, 1562213641);
 
 -- --------------------------------------------------------
 
@@ -2635,6 +2673,18 @@ ALTER TABLE `std_attendance`
   ADD KEY `section_id` (`section_id`),
   ADD KEY `subject_id` (`subject_id`),
   ADD KEY `branch_id` (`branch_id`);
+
+--
+-- Indexes for table `std_atten_incharge`
+--
+ALTER TABLE `std_atten_incharge`
+  ADD PRIMARY KEY (`atten_id`),
+  ADD KEY `branch_id` (`branch_id`),
+  ADD KEY `teacher_id` (`teacher_id`),
+  ADD KEY `class_name_id` (`class_name_id`),
+  ADD KEY `session_id` (`session_id`),
+  ADD KEY `section_id` (`section_id`),
+  ADD KEY `std_id` (`std_id`);
 
 --
 -- Indexes for table `std_class_name`
@@ -3062,13 +3112,19 @@ ALTER TABLE `sms`
 -- AUTO_INCREMENT for table `std_academic_info`
 --
 ALTER TABLE `std_academic_info`
-  MODIFY `academic_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `academic_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `std_attendance`
 --
 ALTER TABLE `std_attendance`
   MODIFY `std_attend_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `std_atten_incharge`
+--
+ALTER TABLE `std_atten_incharge`
+  MODIFY `atten_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `std_class_name`
@@ -3092,7 +3148,7 @@ ALTER TABLE `std_enrollment_head`
 -- AUTO_INCREMENT for table `std_fee_details`
 --
 ALTER TABLE `std_fee_details`
-  MODIFY `fee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `fee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `std_fee_installments`
@@ -3110,13 +3166,13 @@ ALTER TABLE `std_fee_pkg`
 -- AUTO_INCREMENT for table `std_guardian_info`
 --
 ALTER TABLE `std_guardian_info`
-  MODIFY `std_guardian_info_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `std_guardian_info_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `std_ice_info`
 --
 ALTER TABLE `std_ice_info`
-  MODIFY `std_ice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `std_ice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `std_inquiry`
@@ -3128,7 +3184,7 @@ ALTER TABLE `std_inquiry`
 -- AUTO_INCREMENT for table `std_personal_info`
 --
 ALTER TABLE `std_personal_info`
-  MODIFY `std_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `std_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `std_remarks`
@@ -3188,7 +3244,7 @@ ALTER TABLE `time_table_head`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -3370,6 +3426,17 @@ ALTER TABLE `std_attendance`
   ADD CONSTRAINT `std_attendance_ibfk_5` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`subject_id`),
   ADD CONSTRAINT `std_attendance_ibfk_6` FOREIGN KEY (`student_id`) REFERENCES `std_personal_info` (`std_id`),
   ADD CONSTRAINT `std_attendance_ibfk_7` FOREIGN KEY (`teacher_id`) REFERENCES `emp_info` (`emp_id`);
+
+--
+-- Constraints for table `std_atten_incharge`
+--
+ALTER TABLE `std_atten_incharge`
+  ADD CONSTRAINT `std_atten_incharge_ibfk_1` FOREIGN KEY (`branch_id`) REFERENCES `branches` (`branch_id`),
+  ADD CONSTRAINT `std_atten_incharge_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teacher_subject_assign_head` (`teacher_subject_assign_head_id`),
+  ADD CONSTRAINT `std_atten_incharge_ibfk_3` FOREIGN KEY (`class_name_id`) REFERENCES `std_class_name` (`class_name_id`),
+  ADD CONSTRAINT `std_atten_incharge_ibfk_4` FOREIGN KEY (`session_id`) REFERENCES `std_sessions` (`session_id`),
+  ADD CONSTRAINT `std_atten_incharge_ibfk_5` FOREIGN KEY (`section_id`) REFERENCES `std_sections` (`section_id`),
+  ADD CONSTRAINT `std_atten_incharge_ibfk_6` FOREIGN KEY (`std_id`) REFERENCES `std_personal_info` (`std_id`);
 
 --
 -- Constraints for table `std_class_name`
