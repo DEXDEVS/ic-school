@@ -1,8 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\date\DatePicker;
-use dosamigos\datetimepicker\DateTimePicker;
+use kartik\date\DatePicker
 
 /* @var $this yii\web\View */
 /* @var $model common\models\EmpLeave */
@@ -19,10 +18,11 @@ use dosamigos\datetimepicker\DateTimePicker;
         </div>
         <div class="col-md-6">
          <?= $form->field($model, 'starting_date')->widget(DatePicker::classname(), [
-                'options' => ['placeholder' => 'Enter birth date ...', 'id'=>'startDate'],
+                'options' => ['placeholder' => 'Enter start date', 'id'=>'startDate'],
                 'pluginOptions' => [
                     'format' => 'yyyy-mm-dd',
-                    'autoclose'=>true
+                    'autoclose'=>true,
+                    'todayBtn'=>true
                 ]
             ]); ?>
         </div>
@@ -30,7 +30,7 @@ use dosamigos\datetimepicker\DateTimePicker;
      <div class="row">
         <div class="col-md-6">
             <?= $form->field($model, 'ending_date')->widget(DatePicker::classname(), [
-                'options' => ['placeholder' => 'Enter end date ...', 'id'=>'endDate'],
+                'options' => ['placeholder' => 'Enter end date', 'id'=>'endDate'],
                 'pluginOptions' => [
                      'format' => 'yyyy-mm-dd',
                     'autoclose'=>true

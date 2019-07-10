@@ -30,8 +30,8 @@
 								<td><?php echo $i+1; ?></td>
 								<td><?php echo $classHeadName[0]['std_enroll_head_name'];  ?></td>
 								<td>
-									<a href="class-time-table-view?classHeadID=<?php echo $classHeadID; ?>" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-eye-open"></i> View</a>
-									<a href="" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-edit"></i> Update</a>
+									<a href="class-time-table?classHeadID=<?php echo $classHeadID; ?>" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-eye-open"></i> View</a>
+									<!-- <a href="class-time-table?classHeadID=<?php echo $classHeadID; ?>" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-edit"></i> Update</a> -->
 								</td>
 							</tr>
 							<?php } ?>

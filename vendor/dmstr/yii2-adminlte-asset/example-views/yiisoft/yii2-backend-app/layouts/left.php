@@ -275,8 +275,8 @@
                         'icon' => 'comments-o',
                         'url' => '#',
                         'items' => [
-                            ['label' => 'Generate', 'icon' => 'caret-right', 'url' => "./time-table",],
-                             ['label' => 'View', 'icon' => 'caret-right', 'url' => "./time-table-view",],
+                            ['label' => 'Generate Time Table', 'icon' => 'caret-right', 'url' => "./time-table",],
+                             ['label' => 'View Time Table', 'icon' => 'caret-right', 'url' => "./time-table-view",],
                             //['label' => 'SMS Templates', 'icon' => 'caret-right', 'url' => "./sms",],
                             //['label' => 'Absent Students SMS', 'icon' => 'caret-right', 'url' => "./absent-sms",],
                             //['label' => 'Custom SMS', 'icon' => 'caret-right', 'url' => "./custom-sms",],

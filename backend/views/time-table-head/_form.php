@@ -5,6 +5,7 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use common\models\StdEnrollmentHead;
 use common\models\Subjects;
+use common\models\Rooms;
 use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\time\TimePicker;
 
@@ -112,7 +113,9 @@ $branch_id = Yii::$app->user->identity->branch_id;
                                  ]); ?>
                             </div>
                             <div class="col-sm-6">
-                                 <?= $form->field($timeTableDetail, "[{$i}]room")->textInput(); ?>
+                                 <?= $form->field($timeTableDetail, "[{$i}]room")->dropDownList(
+                                    ArrayHelper::map(Rooms::find()->all(),'room_id','room_name'),
+                                        ['prompt'=>'Select Room']) ?>
                             </div>
                         </div><!-- .row -->
                     </div>

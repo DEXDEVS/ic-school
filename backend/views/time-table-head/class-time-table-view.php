@@ -16,7 +16,7 @@
 
 	$subjects = $classSubjects[0]['std_subject_name'];
 	$subjectArray = explode(',', $subjects);
-
+print_r($subjectArray);
 	$countSubjectArray = count($subjectArray);
 
  ?>
@@ -44,11 +44,11 @@
 
 						for ($i=0; $i <$countSubjectArray; $i++) {
 							if ($subjectArray[$i] == 'Break') {
-								$break = $subjectArray[$i];
+								//$break = $subjectArray[$i];
 								//echo $break;
 							
 						 ?>
-						<td><?php echo $break; ?></td>
+						<td><?php //echo $subjectArray[$i];; ?></td>
 						<?php }  // close of if
 							else{?>
 								<td><?php echo $i+1; ?></td>

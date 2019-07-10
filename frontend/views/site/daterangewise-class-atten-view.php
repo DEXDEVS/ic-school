@@ -33,11 +33,19 @@
     
 ?> 
 <div class="container-fluid">
+    <form method="POST" action="mark-attendance">
     <div class="row">
-            <div class="col-md-3 col-md-offset-9">
-                    <a href="./mark-attendance"  style="float: right; margin-right:2px;background-color:#5CB85C;color: white;padding:3px;border-radius:5px;"><i class="glyphicon glyphicon-backward"></i> Back</a>
-            </div>
-    </div><br>
+        <div class="col-md-10">
+            <input type="hidden" name="class_head_id" value="<?php echo $class_id; ?>">
+            <input type="hidden" name="branch_id" value="<?php echo $branch_id; ?>">
+            <input type="hidden" name="teacherHeadId" value="<?php echo $teacher_id; ?>">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" name="view-attendance" style="float: right; margin-right:2px;background-color:#5CB85C;color: white;padding:3px;border-radius:5px;"><i class="glyphicon glyphicon-backward"></i> Back</button>
+        </div>
+    </div>
+</form>
+    <br>
     <div class="row">
         <div class="col-md-3">
             <div class="box" style="border-color:#5CB85C;">
@@ -92,8 +100,9 @@
                     <thead>
                         <?php 
                         $stdId = $students[0]['std_enroll_detail_std_id'];
-                        $atten = Yii::$app->db->createCommand("SELECT CAST(date AS DATE),att.attendance FROM std_atten_incharge as att WHERE att.branch_id = '$branch_id' AND att.teacher_id = '$teacher_id' AND att.class_name_id = '$classnameid' AND att.session_id = '$sessionid' AND att.section_id = '$sectionid' AND att.std_id = '$stdId' AND CAST(date AS DATE) >= '$startDate' AND CAST(date AS DATE) <= '$endDate'")->queryAll(); 
-                        $count = count($atten);
+                        $attendanceDate = Yii::$app->db->createCommand("SELECT CAST(date AS DATE) FROM std_atten_incharge as att WHERE att.branch_id = '$branch_id' AND att.teacher_id = '$teacher_id' AND att.class_name_id = '$classnameid' AND att.session_id = '$sessionid' AND att.section_id = '$sectionid' AND att.std_id = '$stdId' AND CAST(date AS DATE) >= '$startDate' AND CAST(date AS DATE) <= '$endDate'")->queryAll(); 
+                        $count = count($attendanceDate);
+                       // print_r($atten);
                          ?>
                         <tr style="background-color:#d0f2d0; ">
                             <th >Sr #.</th>
@@ -102,7 +111,7 @@
                             <?php for ($i=0; $i <$count ; $i++) { ?>
                             <th>
                                 <?php 
-                                $datee = $atten[$i]["CAST(date AS DATE)"];
+                                $datee = $attendanceDate[$i]["CAST(date AS DATE)"];
                                 $date = explode('-', $datee);
                                 $date1 = $date[2];
                                     echo  $date1; 
@@ -121,7 +130,7 @@
                             <td><?php echo $students[$i]['std_enroll_detail_std_name'];?></td>
                                 <?php 
                                 $stdId = $students[$i]['std_enroll_detail_std_id'];
-    					        
+    					        $atten = Yii::$app->db->createCommand("SELECT CAST(date AS DATE),att.attendance FROM std_atten_incharge as att WHERE att.branch_id = '$branch_id' AND att.teacher_id = '$teacher_id' AND att.class_name_id = '$classnameid' AND att.session_id = '$sessionid' AND att.section_id = '$sectionid' AND att.std_id = '$stdId' AND CAST(date AS DATE) >= '$startDate' AND CAST(date AS DATE) <= '$endDate'")->queryAll();
                                 for ($j=0; $j <$count ; $j++) { ?>
                             <td>
                                 <?php 
