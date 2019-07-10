@@ -81,7 +81,7 @@
                      [
                         'label' => 'Class Time Table',
                         'icon' => 'calendar',
-                        'url' => './premium-version',
+                        'url' => './time-table-view',
                     ],
                     [
                         'label' => 'Class',
