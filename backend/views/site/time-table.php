@@ -1,3 +1,6 @@
+<?php 
+use kartik\select2\Select2;
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +21,7 @@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>Select Class:</label>
-							<select name="class_id" class="form-control">
+							<select name="class_id" class="form-control" required>
 								<option>Select Class</option>
 								<?php 
 								// getting classes `head name` and `head_id` from `std_enrollment_head`
@@ -33,18 +36,17 @@
 							</select>
 						</div>
 					</div>
-					<div class="col-md-4">
-						<label>Select Days:</label>
-						<select name="days[]" class="form-control" multiple="">
-							<option>Select Days</option>
-							<option value="monday">Monday</option>
-							<option value="tuesday">Tuesday</option>
-							<option value="wednesday">Wednesday</option>
-							<option value="thursday">Thursday</option>
-							<option value="friday">Friday</option>
-							<option value="saturday">Saturday</option>
-						</select>
-					</div>
+					<div class="col-md-4"> 
+						<label>Select Days</label>
+			            <?php $data = [ 'Monday' => 'Monday', 'Tuesday' => 'Tuesday', 'Wednesday' => 'Wednesday', 'Thursday' => 'Thursday', 'Friday' => 'Friday', 'Saturday' => 'Saturday', ];
+			            echo Select2::widget([
+						    'name' => 'days',
+						    'value' => '',
+						    'data' => $data,
+						    'options' => ['multiple' => true, 'placeholder' => 'Select Days ...', 'required' => 'required']
+						]);
+		            	?>
+        </div>
 					<div class="col-md-4">
 						<button style="margin-top:25px;" type="submit" name="get_subjects" class="btn btn-success">Get Subjects</button>
 					</div>
