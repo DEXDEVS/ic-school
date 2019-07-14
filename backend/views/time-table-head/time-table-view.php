@@ -10,6 +10,10 @@
 			<div class="box box-default">
 				<div class="box-header">
 					<h3 class="well well-sm">View Class Wise Time Table</h3>
+					<?php 
+							$classHeadIds = Yii::$app->db->createCommand("SELECT DISTINCT(class_id) FROM time_table_head ")->queryAll();
+
+							if (!empty($classHeadIds)) {?>
 					<table class="table table-hover">
 						<thead>
 							<tr>
@@ -19,8 +23,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<?php 
-							$classHeadIds = Yii::$app->db->createCommand("SELECT DISTINCT(class_id) FROM time_table_head ")->queryAll();
+							<?php
 							$countClassHeadIds = count($classHeadIds);
 							for ($i=0; $i <$countClassHeadIds ; $i++) { 
 								$classHeadID = $classHeadIds[$i]['class_id'];
@@ -34,9 +37,19 @@
 									<!-- <a href="class-time-table?classHeadID=<?php echo $classHeadID; ?>" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-edit"></i> Update</a> -->
 								</td>
 							</tr>
-							<?php } ?>
+							<?php
+							 } // closing of for loop
+							?>
 						</tbody>
 					</table>
+					<?php } // closing of if 
+					else { ?>
+						<div class="row info">
+							<div class="col-md-12">
+								<h2 style="text-align:center;">No Schedule yet....!!!</h2>
+							</div>
+						</div>
+					<?php } // closing of else ?>
 					<!-- end of table tag -->
 				</div>
 			</div>

@@ -39,483 +39,804 @@
 			<table class="table table-bordered">
 				<thead >
 					<tr>
-						<th style="width:20px;background-color:#849db7;color:white;text-align: center;">Periods</th>
+						<th style="width:20px;background-color:#849db7;color:white;text-align: center;border-radius:10px;">Periods</th>
 						<?php 
-						for ($s=0; $s <$countSubjects; $s++) { ?>
-							<td style="background-color:#849db7;color:white;text-align: center;"><?php echo $s+1; ?></td>
-						<?php  
+						for ($s=0; $s <=$countSubjects; $s++) {
+
+						 ?>
+
+							<td style="background-color:#849db7;color:white;text-align: center;border-radius:5px;"><?php echo $s+1; ?></td>
+						<?php
 						}  // close of for loop ?>
 					</tr>
+
 					<!-- Monday detail start -->
 					<?php 
-						$mondayHeadId = Yii::$app->db->createCommand("SELECT th.time_table_h_id,th.class_id
-						FROM time_table_head as th
-						WHERE th.class_id = '$classHeadID'
-						AND th.status = 'Active'
-						AND th.days LIKE '%monday%'")->queryAll();
-						
-						$monHeadId = $mondayHeadId[0]['time_table_h_id'];
-						$mondayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room
+
+						$mondayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
 						FROM time_table_detail as td
-						WHERE td.time_table_h_id = '$monHeadId'
-						AND td.status = '1'
-						ORDER BY td.start_time ASC")->queryAll();	
+						INNER JOIN time_table_head as th
+						ON th.time_table_h_id = td.time_table_h_id
+						WHERE th.class_id = '$classHeadID'
+						AND th.status = 'Active' 
+						AND th.days LIKE '%monday%'
+						ORDER BY td.priority ASC")->queryAll();
+						//print_r($thursdayDetails);
+
 					?>
 					<tr>
-						<td  style="background-color:#587899;color:white;line-height:6;">Monday</td>
+						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Monday</td>
 						<?php 
-						if (empty($mondayDetails)) {
-							for ($s=0; $s <$countSubjects ; $s++) { ?>
-							<td><?php echo "---"; ?></td>
-							<?php
-								} // closing of for $countSubjects
-						} else {
+						if (!empty($mondayDetails)) {
 								$countMondayDetails = count($mondayDetails);
+
 							for ($i=0; $i <$countMondayDetails ; $i++) { 
 								$subjectId = $mondayDetails[$i]['subject_id'];
+								$room = $mondayDetails[$i]['room'];
+								$status = $mondayDetails[$i]['status'];
+								$priority = $mondayDetails[$i]['priority'];
+								//echo $priority;
 								$subjectName = Yii::$app->db->createCommand("SELECT subject_name
 								FROM subjects
 								WHERE subject_id = '$subjectId'")->queryAll();
-								$classId = $mondayHeadId[0]['class_id'];
+								
+								$startTime = $mondayDetails[$i]['start_time'];
+								$endTime = $mondayDetails[$i]['end_time'];
+								$room = $mondayDetails[$i]['room'];
 								
 								$teacherDetail = Yii::$app->db->createCommand("SELECT tsah.teacher_subject_assign_head_name
 								FROM teacher_subject_assign_head as tsah
 								INNER JOIN teacher_subject_assign_detail as tsad
 								ON tsah.teacher_subject_assign_head_id = tsad.teacher_subject_assign_detail_head_id
 								WHERE tsad.subject_id = '$subjectId'
-								AND tsad.class_id = '$classId'")->queryAll();
-								$room_id = $mondayDetails[$i]['room'];
-								$roomName = Yii::$app->db->createCommand("SELECT room_name
-								FROM rooms
-								WHERE room_id = '$room_id'")->queryAll();
-								if ($subjectName[0]['subject_name'] == 'Break') {
+								AND tsad.class_id = '$classHeadID'")->queryAll();
+									
 							 ?>
-							<td class="info">
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $mondayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $mondayDetails[$i]['end_time']; ?><br>
-								<u>
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php //echo $roomName[0]['room_name']; ?>
-								</u>
-							</td>
+							 <!-- break info start -->
 							 <?php 
-								}// closing of if Break
-								else { ?>
-							<td>
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $mondayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $mondayDetails[$i]['end_time']; ?><br>
+							 $index = $i+1;
+							 //echo $index;
+							 if ($status == 2 && $priority == $index) { ?>
+
+							<td class="info text-center" style="border-radius:30px; line-height:2.5;">
+								<u><?php
+									echo "<span>break</span>";
+								 ?></u><br>
+							 	<?php 
+							 		echo $startTime;
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		echo $endTime;
+							 	 ?><br>
+							</td>  <!-- break info close -->
+							<?php }
+							 if ($status == 1 && $priority == $index) { ?>
+							<td class="text-center">
 								<u>
-									Kinza Mustafa
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php echo $roomName[0]['room_name']; ?>
-								</u>
+								<?php
+									if (empty($subjectName[0]['subject_name'])) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $subjectName[0]['subject_name'];
+							 		}
+								 ?></u><br>
+							 	<?php 
+							 		if (empty($startTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $startTime;
+							 		}
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		if (empty($endTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $endTime;
+							 		}
+							 	 ?><br>
+							 	 <u>
+							 	 <?php
+							 		if (empty($room)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo "Room #:".$room;
+							 		}
+							 	?>
+							 	 </u><br>
+							 	 <?php 
+							 	 if (empty($teacherDetail[$i]['teacher_subject_assign_head_name'])) {
+							 	 	echo "Not assigned";
+							 	 }
+							 	 else{
+							 	 	echo "<b>".$teacherDetail[$i]['teacher_subject_assign_head_name']."</b>";
+							 	 }
+							 	 
+							 	  ?>
 							</td>
-						<?php } 
-							} // closing of for loop 
-						} // closing of else for monday
+						<?php
+
+						} // closing of if
+						 if ($status == 0 && $priority == $index) { ?>
+							<td class="text-center">
+								<?php
+									echo "<span style='line-height:6;'>----</span>";
+								?>	
+							</td>
+						<?php
+
+						} // closing of if
+							} // closing of for loop		
+						//} // closing of else for monday
 						?>
 					</tr>
+					<?php } else { ?>
+						
+						<?php for ($s=0; $s <=$countSubjects; $s++) { ?>
+
+							<td class="warning" style="text-align:center;line-height:6;"><?php echo "No Schedule"; ?></td>
+						<?php  
+						}  // close of for loop ?>
+					<?php } ?>
 					<!-- Monday detail close -->
 
-					<!-- tuesday detail start -->
+					<!-- Tuesday detail start -->
 					<?php 
-						$tuesdayHeadId = Yii::$app->db->createCommand("SELECT th.time_table_h_id,th.class_id
-						FROM time_table_head as th
-						WHERE th.class_id = '$classHeadID'
-						AND th.status = 'Active'
-						AND th.days LIKE '%tuesday%'")->queryAll();
-						
-						$tueHeadId = $tuesdayHeadId[0]['time_table_h_id'];
-						$tuesdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room
+
+						$tuesdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
 						FROM time_table_detail as td
-						WHERE td.time_table_h_id = '$tueHeadId'
-						AND td.status = '1'
-						ORDER BY td.start_time ASC")->queryAll();
-						//print_r($tuesdayDetails);	
-					// tueday details query close	
+						INNER JOIN time_table_head as th
+						ON th.time_table_h_id = td.time_table_h_id
+						WHERE th.class_id = '$classHeadID'
+						AND th.status = 'Active' 
+						AND th.days LIKE '%tuesday%'
+						ORDER BY td.priority ASC")->queryAll();
+						//print_r($thursdayDetails);
+
 					?>
 					<tr>
-						<td style="background-color:#587899;color:white;line-height:6;">Tuesday</td>
+						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Tuesday</td>
 						<?php 
-						if (empty($tuesdayDetails)) {
-							for ($s=0; $s <$countSubjects ; $s++) { ?>
-								<td><?php echo "---"; ?></td>
-							<?php
-							}
-						} else {
-							$countTuesdayDetails = count($tuesdayDetails);
+						if (!empty($tuesdayDetails)) {
+								$countTuesdayDetails = count($tuesdayDetails);
+
 							for ($i=0; $i <$countTuesdayDetails ; $i++) { 
 								$subjectId = $tuesdayDetails[$i]['subject_id'];
+								$room = $tuesdayDetails[$i]['room'];
+								$status = $tuesdayDetails[$i]['status'];
+								$priority = $tuesdayDetails[$i]['priority'];
+								//echo $priority;
 								$subjectName = Yii::$app->db->createCommand("SELECT subject_name
 								FROM subjects
 								WHERE subject_id = '$subjectId'")->queryAll();
-								$classId = $tuesdayHeadId[0]['class_id'];
+								
+								$startTime = $tuesdayDetails[$i]['start_time'];
+								$endTime = $tuesdayDetails[$i]['end_time'];
+								$room = $tuesdayDetails[$i]['room'];
 								
 								$teacherDetail = Yii::$app->db->createCommand("SELECT tsah.teacher_subject_assign_head_name
 								FROM teacher_subject_assign_head as tsah
 								INNER JOIN teacher_subject_assign_detail as tsad
 								ON tsah.teacher_subject_assign_head_id = tsad.teacher_subject_assign_detail_head_id
 								WHERE tsad.subject_id = '$subjectId'
-								AND tsad.class_id = '$classId'")->queryAll();
-								$room_id = $mondayDetails[$i]['room'];
-								$roomName = Yii::$app->db->createCommand("SELECT room_name
-								FROM rooms
-								WHERE room_id = '$room_id'")->queryAll();
-								if ($subjectName[0]['subject_name'] == 'Break') {
-							?>
-							<td class="info">
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $tuesdayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $tuesdayDetails[$i]['end_time']; ?><br>
+								AND tsad.class_id = '$classHeadID'")->queryAll();
+									
+							 ?>
+							 <!-- break info start -->
+							 <?php 
+							 $index = $i+1;
+							 //echo $index;
+							 if ($status == 2 && $priority == $index) { ?>
+
+							<td class="info text-center" style="border-radius:30px; line-height:2.5;">
+								<u><?php
+									echo "<span>break</span>";
+								 ?></u><br>
+							 	<?php 
+							 		echo $startTime;
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		echo $endTime;
+							 	 ?><br>
+							</td>  <!-- break info close -->
+							<?php }
+							 if ($status == 1 && $priority == $index) { ?>
+							<td class="text-center">
 								<u>
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u>
+								<?php
+									if (empty($subjectName[0]['subject_name'])) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $subjectName[0]['subject_name'];
+							 		}
+								 ?></u><br>
+							 	<?php 
+							 		if (empty($startTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $startTime;
+							 		}
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		if (empty($endTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $endTime;
+							 		}
+							 	 ?><br>
+							 	 <u>
+							 	 <?php
+							 		if (empty($room)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo "Room #:".$room;
+							 		}
+							 	?>
+							 	 </u><br>
+							 	 <?php 
+							 	 if (empty($teacherDetail[$i]['teacher_subject_assign_head_name'])) {
+							 	 	echo "Not assigned";
+							 	 }
+							 	 else{
+							 	 	echo "<b>".$teacherDetail[$i]['teacher_subject_assign_head_name']."</b>";
+							 	 }
+							 	 
+							 	  ?>
 							</td>
-							<?php
-								} else {
-							?>
-							<td>
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $tuesdayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $tuesdayDetails[$i]['end_time']; ?><br>
-								<u>
-									Kinza Mustafa
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php echo $roomName[0]['room_name']; ?>
-								</u>
+						<?php
+
+						} // closing of if
+						 if ($status == 0 && $priority == $index) { ?>
+							<td class="text-center">
+								<?php
+									echo "<span style='line-height:6;'>----</span>";
+								?>	
 							</td>
-							<?php 
-								}
-							} // closing of for loop 
-						} // closing of else for tueday
-						 ?>
+						<?php
+
+						} // closing of if
+							} // closing of for loop		
+						//} // closing of else for monday
+						?>
 					</tr>
+					<?php } else { ?>
+						
+						<?php for ($s=0; $s <=$countSubjects; $s++) { ?>
+
+							<td class="warning" style="text-align:center;line-height:6;"><?php echo "No Schedule"; ?></td>
+						<?php  
+						}  // close of for loop ?>
+					<?php } ?>
 					<!-- Tuesday detail close -->
 
 					<!-- Wednesday detail start -->
 					<?php 
-						$wednesdayHeadId = Yii::$app->db->createCommand("SELECT th.time_table_h_id,th.class_id
-						FROM time_table_head as th
-						WHERE th.class_id = '$classHeadID'
-						AND th.status = 'Active'
-						AND th.days LIKE '%wednesday%'")->queryAll();
-						
-						$wedHeadId = $wednesdayHeadId[0]['time_table_h_id'];
-						$wednesdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room
+
+						$wenesdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
 						FROM time_table_detail as td
-						WHERE td.time_table_h_id = '$wedHeadId'
-						AND td.status = '1'
-						ORDER BY td.start_time ASC")->queryAll();	
+						INNER JOIN time_table_head as th
+						ON th.time_table_h_id = td.time_table_h_id
+						WHERE th.class_id = '$classHeadID'
+						AND th.status = 'Active' 
+						AND th.days LIKE '%wednesday%'
+						ORDER BY td.priority ASC")->queryAll();
+						//print_r($thursdayDetails);
+
 					?>
 					<tr>
-						<td  style="background-color:#587899;color:white;line-height:6;">Wednesday</td>
+						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Wednesday</td>
 						<?php 
-						if (empty($wednesdayDetails)) {
-							for ($s=0; $s <$countSubjects ; $s++) { ?>
-							<td><?php echo "---"; ?></td>
-							<?php
-							} // closing of for $countSubjects
-						} else {
-								$countwednesdayDetails = count($wednesdayDetails);
-							for ($i=0; $i <$countwednesdayDetails ; $i++) { 
-								$subjectId = $wednesdayDetails[$i]['subject_id'];
+						if (!empty($wenesdayDetails)) {
+								$countWednesdayDetails = count($wenesdayDetails);
+
+							for ($i=0; $i <$countWednesdayDetails ; $i++) { 
+								$subjectId = $wenesdayDetails[$i]['subject_id'];
+								$room = $wenesdayDetails[$i]['room'];
+								$status = $wenesdayDetails[$i]['status'];
+								$priority = $wenesdayDetails[$i]['priority'];
+								//echo $priority;
 								$subjectName = Yii::$app->db->createCommand("SELECT subject_name
 								FROM subjects
 								WHERE subject_id = '$subjectId'")->queryAll();
-								$classId = $wednesdayHeadId[0]['class_id'];
+								
+								$startTime = $wenesdayDetails[$i]['start_time'];
+								$endTime = $wenesdayDetails[$i]['end_time'];
+								$room = $wenesdayDetails[$i]['room'];
 								
 								$teacherDetail = Yii::$app->db->createCommand("SELECT tsah.teacher_subject_assign_head_name
 								FROM teacher_subject_assign_head as tsah
 								INNER JOIN teacher_subject_assign_detail as tsad
 								ON tsah.teacher_subject_assign_head_id = tsad.teacher_subject_assign_detail_head_id
 								WHERE tsad.subject_id = '$subjectId'
-								AND tsad.class_id = '$classId'")->queryAll();
-								$room_id = $wednesdayDetails[$i]['room'];
-								$roomName = Yii::$app->db->createCommand("SELECT room_name
-								FROM rooms
-								WHERE room_id = '$room_id'")->queryAll();
-								if ($subjectName[0]['subject_name'] == 'Break') {
+								AND tsad.class_id = '$classHeadID'")->queryAll();
+									
 							 ?>
-							<td class="info">
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $wednesdayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $wednesdayDetails[$i]['end_time']; ?><br>
-								<u>
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php //echo $roomName[0]['room_name']; ?>
-								</u>
-							</td>
+							 <!-- break info start -->
 							 <?php 
-								} else { ?>
-							<td>
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $wednesdayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $wednesdayDetails[$i]['end_time']; ?><br>
+							 $index = $i+1;
+							 //echo $index;
+							 if ($status == 2 && $priority == $index) { ?>
+
+							<td class="info text-center" style="border-radius:30px; line-height:2.5;">
+								<u><?php
+									echo "<span>break</span>";
+								 ?></u><br>
+							 	<?php 
+							 		echo $startTime;
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		echo $endTime;
+							 	 ?><br>
+							</td>  <!-- break info close -->
+							<?php }
+							 if ($status == 1 && $priority == $index) { ?>
+							<td class="text-center">
 								<u>
-									Kinza Mustafa
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php echo $roomName[0]['room_name']; ?>
-								</u>
+								<?php
+									if (empty($subjectName[0]['subject_name'])) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $subjectName[0]['subject_name'];
+							 		}
+								 ?></u><br>
+							 	<?php 
+							 		if (empty($startTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $startTime;
+							 		}
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		if (empty($endTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $endTime;
+							 		}
+							 	 ?><br>
+							 	 <u>
+							 	 <?php
+							 		if (empty($room)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo "Room #:".$room;
+							 		}
+							 	?>
+							 	 </u><br>
+							 	 <?php 
+							 	 if (empty($teacherDetail[$i]['teacher_subject_assign_head_name'])) {
+							 	 	echo "Not assigned";
+							 	 }
+							 	 else{
+							 	 	echo "<b>".$teacherDetail[$i]['teacher_subject_assign_head_name']."</b>";
+							 	 }
+							 	 
+							 	  ?>
 							</td>
-						<?php 	} // closing of else Break
-							} // closing of for loop 
-						} // closing of else for wednesdayDetails
+						<?php
+
+						} // closing of if
+						 if ($status == 0 && $priority == $index) { ?>
+							<td class="text-center">
+								<?php
+									echo "<span style='line-height:6;'>----</span>";
+								?>	
+							</td>
+						<?php
+
+						} // closing of if
+							} // closing of for loop		
+						//} // closing of else for monday
 						?>
 					</tr>
+					<?php } else { ?>
+						
+						<?php for ($s=0; $s <=$countSubjects; $s++) { ?>
+
+							<td class="warning" style="text-align:center;line-height:6;"><?php echo "No Schedule"; ?></td>
+						<?php  
+						}  // close of for loop ?>
+					<?php } ?>
 					<!-- Wednesday detail close -->
 
 					<!-- Thursday detail start -->
 					<?php 
-						$thursdayHeadId = Yii::$app->db->createCommand("SELECT th.time_table_h_id,th.class_id
-						FROM time_table_head as th
-						WHERE th.class_id = '$classHeadID'
-						AND th.status = 'Active'
-						AND th.days LIKE '%thursday%'")->queryAll();
-						
-						$thrHeadId = $thursdayHeadId[0]['time_table_h_id'];
-						$thursdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room
+
+						$thursdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
 						FROM time_table_detail as td
-						WHERE td.time_table_h_id = '$thrHeadId'
-						AND td.status = '1'
-						ORDER BY td.start_time ASC")->queryAll();	
+						INNER JOIN time_table_head as th
+						ON th.time_table_h_id = td.time_table_h_id
+						WHERE th.class_id = '$classHeadID'
+						AND th.status = 'Active' 
+						AND th.days LIKE '%thursday%'
+						ORDER BY td.priority ASC")->queryAll();
+						//print_r($thursdayDetails);
+
 					?>
 					<tr>
-						<td  style="background-color:#587899;color:white;line-height:6;">Thursday</td>
+						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Thursday</td>
 						<?php 
-						if (empty($thursdayDetails)) {
-							for ($s=0; $s <$countSubjects ; $s++) { ?>
-							<td><?php echo "---"; ?></td>
-							<?php
-							} // closing of for $countSubjects
-						} else {
-								$countthursdayDetails = count($thursdayDetails);
-							for ($i=0; $i <$countthursdayDetails ; $i++) { 
+						if (!empty($thursdayDetails)) {
+								$countThursdayDetails = count($thursdayDetails);
+
+							for ($i=0; $i <$countThursdayDetails ; $i++) { 
 								$subjectId = $thursdayDetails[$i]['subject_id'];
+								$room = $thursdayDetails[$i]['room'];
+								$status = $thursdayDetails[$i]['status'];
+								$priority = $thursdayDetails[$i]['priority'];
+								//echo $priority;
 								$subjectName = Yii::$app->db->createCommand("SELECT subject_name
 								FROM subjects
 								WHERE subject_id = '$subjectId'")->queryAll();
-								$classId = $thursdayHeadId[0]['class_id'];
+								
+								$startTime = $thursdayDetails[$i]['start_time'];
+								$endTime = $thursdayDetails[$i]['end_time'];
+								$room = $thursdayDetails[$i]['room'];
 								
 								$teacherDetail = Yii::$app->db->createCommand("SELECT tsah.teacher_subject_assign_head_name
 								FROM teacher_subject_assign_head as tsah
 								INNER JOIN teacher_subject_assign_detail as tsad
 								ON tsah.teacher_subject_assign_head_id = tsad.teacher_subject_assign_detail_head_id
 								WHERE tsad.subject_id = '$subjectId'
-								AND tsad.class_id = '$classId'")->queryAll();
-								$room_id = $thursdayDetails[$i]['room'];
-								$roomName = Yii::$app->db->createCommand("SELECT room_name
-								FROM rooms
-								WHERE room_id = '$room_id'")->queryAll();
-								if ($subjectName[0]['subject_name'] == 'Break') {
+								AND tsad.class_id = '$classHeadID'")->queryAll();
+									
 							 ?>
-							<td class="info">
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $thursdayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $thursdayDetails[$i]['end_time']; ?><br>
-								<u>
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php //echo $roomName[0]['room_name']; ?>
-								</u>
-							</td>
+							 <!-- break info start -->
 							 <?php 
-								} else { ?>
-							<td>
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $thursdayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $thursdayDetails[$i]['end_time']; ?><br>
+							 $index = $i+1;
+							 //echo $index;
+							 if ($status == 2 && $priority == $index) { ?>
+
+							<td class="info text-center" style="border-radius:30px; line-height:2.5;">
+								<u><?php
+									echo "<span>break</span>";
+								 ?></u><br>
+							 	<?php 
+							 		echo $startTime;
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		echo $endTime;
+							 	 ?><br>
+							</td>  <!-- break info close -->
+							<?php }
+							 if ($status == 1 && $priority == $index) { ?>
+							<td class="text-center">
 								<u>
-									Kinza Mustafa
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php echo $roomName[0]['room_name']; ?>
-								</u>
+								<?php
+									if (empty($subjectName[0]['subject_name'])) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $subjectName[0]['subject_name'];
+							 		}
+								 ?></u><br>
+							 	<?php 
+							 		if (empty($startTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $startTime;
+							 		}
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		if (empty($endTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $endTime;
+							 		}
+							 	 ?><br>
+							 	 <u>
+							 	 <?php
+							 		if (empty($room)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo "Room #:".$room;
+							 		}
+							 	?>
+							 	 </u><br>
+							 	 <?php 
+							 	 if (empty($teacherDetail[$i]['teacher_subject_assign_head_name'])) {
+							 	 	echo "Not assigned";
+							 	 }
+							 	 else{
+							 	 	echo "<b>".$teacherDetail[$i]['teacher_subject_assign_head_name']."</b>";
+							 	 }
+							 	 
+							 	  ?>
 							</td>
-						<?php 	} // closing of else Break
-							} // closing of for loop 
-						} // closing of else for wednesdayDetails
+						<?php
+
+						} // closing of if
+						 if ($status == 0 && $priority == $index) { ?>
+							<td class="text-center">
+								<?php
+									echo "<span style='line-height:6;'>----</span>";
+								?>	
+							</td>
+						<?php
+
+						} // closing of if
+							} // closing of for loop		
+						//} // closing of else for monday
 						?>
 					</tr>
+					<?php } else { ?>
+						
+						<?php for ($s=0; $s <=$countSubjects; $s++) { ?>
+
+							<td class="warning" style="text-align:center;line-height:6;"><?php echo "No Schedule"; ?></td>
+						<?php  
+						}  // close of for loop ?>
+					<?php } ?>
 					<!-- Thursday detail close -->
 
-					<!-- Saturday detail start -->
+
+					<!-- Friday detail start -->
 					<?php 
-						$saturdayHeadId = Yii::$app->db->createCommand("SELECT th.time_table_h_id,th.class_id
-						FROM time_table_head as th
-						WHERE th.class_id = '$classHeadID'
-						AND th.status = 'Active'
-						AND th.days LIKE '%saturday%'")->queryAll();
-						
-						$satHeadId = $saturdayHeadId[0]['time_table_h_id'];
-						$saturdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room
+
+						$fridayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
 						FROM time_table_detail as td
-						WHERE td.time_table_h_id = '$satHeadId'
-						AND td.status = '1'
-						ORDER BY td.start_time ASC")->queryAll();	
+						INNER JOIN time_table_head as th
+						ON th.time_table_h_id = td.time_table_h_id
+						WHERE th.class_id = '$classHeadID'
+						AND th.status = 'Active' 
+						AND th.days LIKE '%thursday%'
+						ORDER BY td.priority ASC")->queryAll();
+						//print_r($thursdayDetails);
+
 					?>
 					<tr>
-						<td  style="background-color:#587899;color:white;line-height:6;">Friday</td>
+						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Friday</td>
 						<?php 
-						if (empty($saturdayDetails)) {
-							for ($s=0; $s <$countSubjects ; $s++) { ?>
-							<td><?php echo "---"; ?></td>
-							<?php
-							} // closing of for $countSubjects
-						} else {
-								$countsaturdayDetails = count($saturdayDetails);
-							for ($i=0; $i <$countsaturdayDetails ; $i++) { 
-								$subjectId = $saturdayDetails[$i]['subject_id'];
+						if (!empty($fridayDetails)) {
+								$countFridayDetails = count($fridayDetails);
+
+							for ($i=0; $i <$countFridayDetails ; $i++) { 
+								$subjectId = $fridayDetails[$i]['subject_id'];
+								$room = $fridayDetails[$i]['room'];
+								$status = $fridayDetails[$i]['status'];
+								$priority = $fridayDetails[$i]['priority'];
+								//echo $priority;
 								$subjectName = Yii::$app->db->createCommand("SELECT subject_name
 								FROM subjects
 								WHERE subject_id = '$subjectId'")->queryAll();
-								$classId = $saturdayHeadId[0]['class_id'];
+								
+								$startTime = $fridayDetails[$i]['start_time'];
+								$endTime = $fridayDetails[$i]['end_time'];
+								$room = $fridayDetails[$i]['room'];
 								
 								$teacherDetail = Yii::$app->db->createCommand("SELECT tsah.teacher_subject_assign_head_name
 								FROM teacher_subject_assign_head as tsah
 								INNER JOIN teacher_subject_assign_detail as tsad
 								ON tsah.teacher_subject_assign_head_id = tsad.teacher_subject_assign_detail_head_id
 								WHERE tsad.subject_id = '$subjectId'
-								AND tsad.class_id = '$classId'")->queryAll();
-								$room_id = $saturdayDetails[$i]['room'];
-								$roomName = Yii::$app->db->createCommand("SELECT room_name
-								FROM rooms
-								WHERE room_id = '$room_id'")->queryAll();
-								if ($subjectName[0]['subject_name'] == 'Break') {
+								AND tsad.class_id = '$classHeadID'")->queryAll();
+									
 							 ?>
-							<td class="info">
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $saturdayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $saturdayDetails[$i]['end_time']; ?><br>
-								<u>
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php //echo $roomName[0]['room_name']; ?>
-								</u>
-							</td>
+							 <!-- break info start -->
 							 <?php 
-								} else { ?>
-							<td>
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $saturdayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $saturdayDetails[$i]['end_time']; ?><br>
+							 $index = $i+1;
+							 //echo $index;
+							 if ($status == 2 && $priority == $index) { ?>
+
+							<td class="info text-center" style="border-radius:30px; line-height:2.5;">
+								<u><?php
+									echo "<span>break</span>";
+								 ?></u><br>
+							 	<?php 
+							 		echo $startTime;
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		echo $endTime;
+							 	 ?><br>
+							</td>  <!-- break info close -->
+							<?php }
+							 if ($status == 1 && $priority == $index) { ?>
+							<td class="text-center">
 								<u>
-									Kinza Mustafa
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php echo $roomName[0]['room_name']; ?>
-								</u>
+								<?php
+									if (empty($subjectName[0]['subject_name'])) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $subjectName[0]['subject_name'];
+							 		}
+								 ?></u><br>
+							 	<?php 
+							 		if (empty($startTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $startTime;
+							 		}
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		if (empty($endTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $endTime;
+							 		}
+							 	 ?><br>
+							 	 <u>
+							 	 <?php
+							 		if (empty($room)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo "Room #:".$room;
+							 		}
+							 	?>
+							 	 </u><br>
+							 	 <?php 
+							 	 if (empty($teacherDetail[$i]['teacher_subject_assign_head_name'])) {
+							 	 	echo "Not assigned";
+							 	 }
+							 	 else{
+							 	 	echo "<b>".$teacherDetail[$i]['teacher_subject_assign_head_name']."</b>";
+							 	 }
+							 	 
+							 	  ?>
 							</td>
-						<?php 	} // closing of else Break
-							} // closing of for loop 
-						} // closing of else for saturdayDetails
+						<?php
+
+						} // closing of if
+						 if ($status == 0 && $priority == $index) { ?>
+							<td class="text-center">
+								<?php
+									echo "<span style='line-height:6;'>----</span>";
+								?>	
+							</td>
+						<?php
+
+						} // closing of if
+							} // closing of for loop		
+						//} // closing of else for monday
 						?>
 					</tr>
-					<!-- Saturday detail close -->
-					
+					<?php } else { ?>
+						
+						<?php for ($s=0; $s <=$countSubjects; $s++) { ?>
+
+							<td class="warning" style="text-align:center;line-height:6;"><?php echo "No Schedule"; ?></td>
+						<?php  
+						}  // close of for loop ?>
+					<?php } ?>
+					<!-- Friday detail close -->
 
 					<!-- Saturday detail start -->
 					<?php 
-						$saturdayHeadId = Yii::$app->db->createCommand("SELECT th.time_table_h_id,th.class_id
-						FROM time_table_head as th
-						WHERE th.class_id = '$classHeadID'
-						AND th.status = 'Active'
-						AND th.days LIKE '%saturday%'")->queryAll();
-						
-						$satHeadId = $saturdayHeadId[0]['time_table_h_id'];
-						$saturdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room
+
+						$saturdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
 						FROM time_table_detail as td
-						WHERE td.time_table_h_id = '$satHeadId'
-						AND td.status = '1'
-						ORDER BY td.start_time ASC")->queryAll();	
+						INNER JOIN time_table_head as th
+						ON th.time_table_h_id = td.time_table_h_id
+						WHERE th.class_id = '$classHeadID'
+						AND th.status = 'Active' 
+						AND th.days LIKE '%saturday%'
+						ORDER BY td.priority ASC")->queryAll();
+						//print_r($thursdayDetails);
+
 					?>
 					<tr>
-						<td  style="background-color:#587899;color:white;line-height:6;">Saturday</td>
+						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Saturday</td>
 						<?php 
-						if (empty($saturdayDetails)) {
-							for ($s=0; $s <$countSubjects ; $s++) { ?>
-							<td><?php echo "---"; ?></td>
-							<?php
-							} // closing of for $countSubjects
-						} else {
+						if (!empty($saturdayDetails)) {
 								$countsaturdayDetails = count($saturdayDetails);
+
 							for ($i=0; $i <$countsaturdayDetails ; $i++) { 
 								$subjectId = $saturdayDetails[$i]['subject_id'];
+								$room = $saturdayDetails[$i]['room'];
+								$status = $saturdayDetails[$i]['status'];
+								$priority = $saturdayDetails[$i]['priority'];
+								//echo $priority;
 								$subjectName = Yii::$app->db->createCommand("SELECT subject_name
 								FROM subjects
 								WHERE subject_id = '$subjectId'")->queryAll();
-								$classId = $saturdayHeadId[0]['class_id'];
+								
+								$startTime = $saturdayDetails[$i]['start_time'];
+								$endTime = $saturdayDetails[$i]['end_time'];
+								$room = $saturdayDetails[$i]['room'];
 								
 								$teacherDetail = Yii::$app->db->createCommand("SELECT tsah.teacher_subject_assign_head_name
 								FROM teacher_subject_assign_head as tsah
 								INNER JOIN teacher_subject_assign_detail as tsad
 								ON tsah.teacher_subject_assign_head_id = tsad.teacher_subject_assign_detail_head_id
 								WHERE tsad.subject_id = '$subjectId'
-								AND tsad.class_id = '$classId'")->queryAll();
-								$room_id = $saturdayDetails[$i]['room'];
-								$roomName = Yii::$app->db->createCommand("SELECT room_name
-								FROM rooms
-								WHERE room_id = '$room_id'")->queryAll();
-								if ($subjectName[0]['subject_name'] == 'Break') {
+								AND tsad.class_id = '$classHeadID'")->queryAll();
+									
 							 ?>
-							<td class="info">
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $saturdayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $saturdayDetails[$i]['end_time']; ?><br>
-								<u>
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php //echo $roomName[0]['room_name']; ?>
-								</u>
-							</td>
+							 <!-- break info start -->
 							 <?php 
-								} else { ?>
-							<td>
-								<u><?php echo $subjectName[0]['subject_name']; ?></u><br>
-								<?php echo $saturdayDetails[$i]['start_time']; ?>
-								<b>TO</b>
-								<?php echo $saturdayDetails[$i]['end_time']; ?><br>
+							 $index = $i+1;
+							 //echo $index;
+							 if ($status == 2 && $priority == $index) { ?>
+
+							<td class="info text-center" style="border-radius:30px; line-height:2.5;">
+								<u><?php
+									echo "<span>break</span>";
+								 ?></u><br>
+							 	<?php 
+							 		echo $startTime;
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		echo $endTime;
+							 	 ?><br>
+							</td>  <!-- break info close -->
+							<?php }
+							 if ($status == 1 && $priority == $index) { ?>
+							<td class="text-center">
 								<u>
-									Kinza Mustafa
-									<?php //echo $teacherDetail[0]['teacher_subject_assign_head_name']; ?>
-								</u><br>
-								<u>
-									<?php echo $roomName[0]['room_name']; ?>
-								</u>
+								<?php
+									if (empty($subjectName[0]['subject_name'])) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $subjectName[0]['subject_name'];
+							 		}
+								 ?></u><br>
+							 	<?php 
+							 		if (empty($startTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $startTime;
+							 		}
+							 	 ?>
+							 	 <span>TO</span>
+							 	 <?php 
+							 		if (empty($endTime)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo $endTime;
+							 		}
+							 	 ?><br>
+							 	 <u>
+							 	 <?php
+							 		if (empty($room)) {
+							 			echo "Not set";
+							 		}else{
+							 			echo "Room #:".$room;
+							 		}
+							 	?>
+							 	 </u><br>
+							 	 <?php 
+							 	 if (empty($teacherDetail[$i]['teacher_subject_assign_head_name'])) {
+							 	 	echo "Not assigned";
+							 	 }
+							 	 else{
+							 	 	echo "<b>".$teacherDetail[$i]['teacher_subject_assign_head_name']."</b>";
+							 	 }
+							 	 
+							 	  ?>
 							</td>
-						<?php 	} // closing of else Break
-							} // closing of for loop 
-						} // closing of else for saturdayDetails
+						<?php
+
+						} // closing of if
+						 if ($status == 0 && $priority == $index) { ?>
+							<td class="text-center">
+								<?php
+									echo "<span style='line-height:6;'>----</span>";
+								?>	
+							</td>
+						<?php
+
+						} // closing of if
+							} // closing of for loop		
+						//} // closing of else for monday
 						?>
 					</tr>
+					<?php } else { ?>
+						
+						<?php for ($s=0; $s <=$countSubjects; $s++) { ?>
+
+							<td class="warning" style="text-align:center;line-height:6;"><?php echo "No Schedule"; ?></td>
+						<?php  
+						}  // close of for loop ?>
+					<?php } ?>
 					<!-- Saturday detail close -->
+					
 				</thead>
 			</table>
 		</div>
