@@ -189,7 +189,7 @@ if(isset($_GET['classHeadID'])){
 					<!-- Tuesday detail start -->
 					<?php 
 
-						$tuesdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
+						$tuesdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority,th.time_table_h_id
 						FROM time_table_detail as td
 						INNER JOIN time_table_head as th
 						ON th.time_table_h_id = td.time_table_h_id
@@ -325,7 +325,7 @@ if(isset($_GET['classHeadID'])){
 					<!-- Wednesday detail start -->
 					<?php 
 
-						$wenesdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
+						$wenesdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority,th.time_table_h_id
 						FROM time_table_detail as td
 						INNER JOIN time_table_head as th
 						ON th.time_table_h_id = td.time_table_h_id
@@ -461,7 +461,7 @@ if(isset($_GET['classHeadID'])){
 					<!-- Thursday detail start -->
 					<?php 
 
-						$thursdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
+						$thursdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority,th.time_table_h_id
 						FROM time_table_detail as td
 						INNER JOIN time_table_head as th
 						ON th.time_table_h_id = td.time_table_h_id
@@ -598,7 +598,7 @@ if(isset($_GET['classHeadID'])){
 					<!-- Friday detail start -->
 					<?php 
 
-						$fridayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
+						$fridayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority,th.time_table_h_id
 						FROM time_table_detail as td
 						INNER JOIN time_table_head as th
 						ON th.time_table_h_id = td.time_table_h_id
@@ -734,7 +734,7 @@ if(isset($_GET['classHeadID'])){
 					<!-- Saturday detail start -->
 					<?php 
 
-						$saturdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
+						$saturdayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority,th.time_table_h_id
 						FROM time_table_detail as td
 						INNER JOIN time_table_head as th
 						ON th.time_table_h_id = td.time_table_h_id
