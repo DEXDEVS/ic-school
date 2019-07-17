@@ -33,7 +33,7 @@ class TimeTableHeadController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete', 'bulk-delete','fetch-subjects','time-table-view','class-time-table-view','class-time-table'],
+                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete', 'bulk-delete','fetch-subjects','time-table-view','class-time-table-view','class-time-table','time-table-update'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -49,7 +49,11 @@ class TimeTableHeadController extends Controller
         ];
     }
 
-
+    public function beforeAction($action) {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    } 
+    
     public function actionTimeTableView()
     { 
         return $this->render('time-table-view');
@@ -63,6 +67,10 @@ class TimeTableHeadController extends Controller
     public function actionClassTimeTableView()
     { 
         return $this->render('class-time-table-view');
+    }
+    public function actionTimeTableUpdate()
+    { 
+        return $this->render('time-table-update');
     }
     /**
      * Lists all TimeTableHead models.

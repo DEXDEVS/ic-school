@@ -16,7 +16,7 @@ use kartik\select2\Select2;
 				</div>
 			</div>
 			<div class="row">
-				<form method="post" action="time-table">
+				<form method="post" >
 					<input type="hidden" name="_csrf" class="form-control" value="<?=Yii::$app->request->getCsrfToken()?>">
 					<div class="col-md-4">
 						<div class="form-group">
@@ -160,13 +160,13 @@ if(isset($_POST['get_subjects'])){
 						<div class="row">
 							<div class="col-md-4">
 								<label>Start Time</label>
-								<input type="time" name="start_time[]" class="form-control">
+								<input type="time" name="start_time[]" class="form-control" id="start_time<?php echo $j;?>">
 								<label>End Time</label>
-								<input type="time" name="end_time[]" class="form-control">
+								<input type="time" name="end_time[]" class="form-control" id="end_time<?php echo $j;?>">
 							</div>
 							<div class="col-md-4" style="border-right:1px solid;">
 								<label>Rooms</label>
-								<select name="rooms[]" class="form-control">
+								<select name="rooms[]" class="form-control" id="room<?php echo $j;?>">
 									<option>Select Room</option>
 									<?php 
 									$rooms = Yii::$app->db->createCommand("SELECT room_id,room_name FROM rooms ")->queryAll();
@@ -182,8 +182,8 @@ if(isset($_POST['get_subjects'])){
 									<<?php } ?>
 								</select>
 								<label>Priority</label>
-								<select name="priority[]" class="form-control" required="">
-									<option value="">Select Priority</option>
+								<select name="priority[]" class="form-control" required="" id="priority<?php echo $j;?>">
+									<option value="" >Select Priority</option>
 									<?php 
 									for ($p=0; $p <=$subjectArrayCount ; $p++) { 
 
@@ -195,8 +195,8 @@ if(isset($_POST['get_subjects'])){
 								</select>
 							</div>
 							<div class="col-md-4"><br>
-								<input type="radio" name="on_off[<?php echo $j;?>]" value="1" checked> ON
-								<input type="radio" name="on_off[<?php echo $j;?>]" value="0"> Off
+								<input type="radio" name="on_off[<?php echo $j;?>]" value="1" checked onclick="on(<?php echo $j;?>)"> ON
+								<input type="radio" name="on_off[<?php echo $j;?>]" value="0" onclick="off(<?php echo $j;?>)" > Off
 							</div>
 						</div>
 						<?php } // subject loop close ?>
@@ -287,6 +287,7 @@ if(isset($_POST['get_subjects'])){
 							'start_time'		=> '',
 							'end_time'			=> '',
 							'room'				=> '',
+							'priority'			=> $priority[$n],
 							'status'			=> $status[$n],
 							'created_at'		=> new \yii\db\Expression('NOW()'),
 							'created_by'		=> Yii::$app->user->identity->id, 
@@ -322,3 +323,18 @@ if(isset($_POST['get_subjects'])){
  ?>
 </body>
 </html>
+<script type="text/javascript">
+	function on(j){
+		$('#start_time'+j). prop("disabled", false);
+		$('#end_time'+j). prop("disabled", false);
+		$('#room'+j). prop("disabled", false);
+		//$('#priority'+j). prop("disabled", false);
+	}
+	function off(k){
+		$('#start_time'+k). prop("disabled", true);
+		$('#end_time'+k). prop("disabled", true);
+		$('#room'+k). prop("disabled", true);
+		//$('#priority'+k). prop("disabled", true);
+	}
+	
+</script>	

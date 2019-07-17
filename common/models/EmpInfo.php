@@ -146,8 +146,9 @@ class EmpInfo extends \yii\db\ActiveRecord
      */
     public function getEmpDesignations()
     {
-        return $this->hasOne(EmpDesignation::className(), ['emp_designation_id' => 'emp_designation_id']);
+        return $this->hasMany(EmpDesignation::className(), ['emp_id' => 'emp_id']);
     }
+    
     public function getEmpBranch()
     {
         return $this->hasOne(Branches::className(), ['branch_id' => 'emp_branch_id']);

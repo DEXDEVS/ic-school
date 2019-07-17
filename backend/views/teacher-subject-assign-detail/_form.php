@@ -15,16 +15,13 @@ $branch_id = Yii::$app->user->identity->branch_id;
 ?>
 
 <div class="teacher-subject-assign-detail-form">
-
-
-    
     <?php $form = ActiveForm::begin(); ?>
     <h3 style="color: #337AB7; margin-top: -10px"><small> ( Fields with <span style="color: red;">red stars </span>are required )</small> </h3>
         <div class="row">
             <div class="col-md-6">
                 <i class="fa fa-star" style="font-size: 8px; color: red; position: relative; left: 105px; top: 18px"></i>
                 <?= $form->field($teacherSubjectAssignHead, 'teacher_id')->dropDownList(
-                    ArrayHelper::map(EmpInfo::find()->innerJoinWith('empDesignations')->where(['group_by' => 'Faculty','emp_branch_id'=> $branch_id, 'delete_status'=>1])->all(),'emp_id','emp_name'),
+                    ArrayHelper::map(EmpInfo::find()->innerJoinWith('empDesignations')->where(['emp_designation.group_by' => 'Faculty','emp_info.emp_branch_id'=> $branch_id, 'emp_info.delete_status'=>1])->all(),'emp_id','emp_name'),
                     ['prompt'=>'Select Teacher']
                 )?>
             </div>

@@ -1,5 +1,5 @@
 <?php 
-
+if(isset($_GET['classHeadID'])){
 	// getting class Head id
 	$classHeadID = $_GET['classHeadID'];
 
@@ -48,12 +48,12 @@
 							<td style="background-color:#849db7;color:white;text-align: center;border-radius:5px;"><?php echo $s+1; ?></td>
 						<?php
 						}  // close of for loop ?>
+						<td class="info">Action</td>
 					</tr>
-
 					<!-- Monday detail start -->
 					<?php 
 
-						$mondayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority
+						$mondayDetails = Yii::$app->db->createCommand("SELECT td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority,th.time_table_h_id
 						FROM time_table_detail as td
 						INNER JOIN time_table_head as th
 						ON th.time_table_h_id = td.time_table_h_id
@@ -61,13 +61,14 @@
 						AND th.status = 'Active' 
 						AND th.days LIKE '%monday%'
 						ORDER BY td.priority ASC")->queryAll();
-						//print_r($thursdayDetails);
+						//print_r($mondayId);
 
 					?>
 					<tr>
 						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Monday</td>
 						<?php 
 						if (!empty($mondayDetails)) {
+								$mondayId = $mondayDetails[0]['time_table_h_id'];
 								$countMondayDetails = count($mondayDetails);
 
 							for ($i=0; $i <$countMondayDetails ; $i++) { 
@@ -170,15 +171,19 @@
 							} // closing of for loop		
 						//} // closing of else for monday
 						?>
+						<td style="text-align: center;line-height:6;">
+							<a href="./time-table-update?dayId=<?php echo $mondayId; ?>&classHeadID=<?php echo $classHeadID; ?>"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+						</td>
 					</tr>
-					<?php } else { ?>
+					<?php } // closing of if
+					else { ?>
 						
 						<?php for ($s=0; $s <=$countSubjects; $s++) { ?>
 
 							<td class="warning" style="text-align:center;line-height:6;"><?php echo "No Schedule"; ?></td>
 						<?php  
 						}  // close of for loop ?>
-					<?php } ?>
+					<?php } // closing of else ?>
 					<!-- Monday detail close -->
 
 					<!-- Tuesday detail start -->
@@ -192,6 +197,7 @@
 						AND th.status = 'Active' 
 						AND th.days LIKE '%tuesday%'
 						ORDER BY td.priority ASC")->queryAll();
+						
 						//print_r($thursdayDetails);
 
 					?>
@@ -199,6 +205,7 @@
 						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Tuesday</td>
 						<?php 
 						if (!empty($tuesdayDetails)) {
+								$tuesdayId = $tuesdayDetails[0]['time_table_h_id'];
 								$countTuesdayDetails = count($tuesdayDetails);
 
 							for ($i=0; $i <$countTuesdayDetails ; $i++) { 
@@ -301,6 +308,9 @@
 							} // closing of for loop		
 						//} // closing of else for monday
 						?>
+						<td style="text-align: center;line-height:6;">
+							<a href="./time-table-update?dayId=<?php echo $tuesdayId; ?>&classHeadID=<?php echo $classHeadID; ?>"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+						</td>
 					</tr>
 					<?php } else { ?>
 						
@@ -323,6 +333,7 @@
 						AND th.status = 'Active' 
 						AND th.days LIKE '%wednesday%'
 						ORDER BY td.priority ASC")->queryAll();
+						
 						//print_r($thursdayDetails);
 
 					?>
@@ -330,6 +341,7 @@
 						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Wednesday</td>
 						<?php 
 						if (!empty($wenesdayDetails)) {
+								$wednesdayId = $wenesdayDetails[0]['time_table_h_id'];
 								$countWednesdayDetails = count($wenesdayDetails);
 
 							for ($i=0; $i <$countWednesdayDetails ; $i++) { 
@@ -432,6 +444,9 @@
 							} // closing of for loop		
 						//} // closing of else for monday
 						?>
+						<td style="text-align: center;line-height:6;">
+							<a href="./time-table-update?dayId=<?php echo $wednesdayId; ?>&classHeadID=<?php echo $classHeadID; ?>"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+						</td>
 					</tr>
 					<?php } else { ?>
 						
@@ -454,6 +469,7 @@
 						AND th.status = 'Active' 
 						AND th.days LIKE '%thursday%'
 						ORDER BY td.priority ASC")->queryAll();
+						
 						//print_r($thursdayDetails);
 
 					?>
@@ -461,6 +477,7 @@
 						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Thursday</td>
 						<?php 
 						if (!empty($thursdayDetails)) {
+								$thursdayId = $thursdayDetails[0]['time_table_h_id'];
 								$countThursdayDetails = count($thursdayDetails);
 
 							for ($i=0; $i <$countThursdayDetails ; $i++) { 
@@ -563,6 +580,9 @@
 							} // closing of for loop		
 						//} // closing of else for monday
 						?>
+						<td style="text-align: center;line-height:6;">
+							<a href="./time-table-update?dayId=<?php echo $thursdayId; ?>&classHeadID=<?php echo $classHeadID; ?>"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+						</td>
 					</tr>
 					<?php } else { ?>
 						
@@ -586,6 +606,7 @@
 						AND th.status = 'Active' 
 						AND th.days LIKE '%thursday%'
 						ORDER BY td.priority ASC")->queryAll();
+						
 						//print_r($thursdayDetails);
 
 					?>
@@ -593,6 +614,7 @@
 						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Friday</td>
 						<?php 
 						if (!empty($fridayDetails)) {
+								$fridayId = $fridayDetails[0]['time_table_h_id'];
 								$countFridayDetails = count($fridayDetails);
 
 							for ($i=0; $i <$countFridayDetails ; $i++) { 
@@ -695,6 +717,9 @@
 							} // closing of for loop		
 						//} // closing of else for monday
 						?>
+						<td style="text-align: center;line-height:6;">
+							<a href="./time-table-update?dayId=<?php echo $fridayId; ?>&classHeadID=<?php echo $classHeadID; ?>"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+						</td>
 					</tr>
 					<?php } else { ?>
 						
@@ -717,6 +742,7 @@
 						AND th.status = 'Active' 
 						AND th.days LIKE '%saturday%'
 						ORDER BY td.priority ASC")->queryAll();
+						
 						//print_r($thursdayDetails);
 
 					?>
@@ -724,6 +750,7 @@
 						<td  style="background-color:#587899;color:white;line-height:6;text-align: center;border-radius:20px;">Saturday</td>
 						<?php 
 						if (!empty($saturdayDetails)) {
+								$saturdayId = $saturdayDetails[0]['time_table_h_id'];
 								$countsaturdayDetails = count($saturdayDetails);
 
 							for ($i=0; $i <$countsaturdayDetails ; $i++) { 
@@ -826,6 +853,9 @@
 							} // closing of for loop		
 						//} // closing of else for monday
 						?>
+						<td style="text-align: center;line-height:6;">
+							<a href="./time-table-update?dayId=<?php echo $saturdayId; ?>&classHeadID=<?php echo $classHeadID; ?>"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+						</td>
 					</tr>
 					<?php } else { ?>
 						
@@ -844,3 +874,5 @@
 </div>
 </body>
 </html>
+
+<?php } ?>

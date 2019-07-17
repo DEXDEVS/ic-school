@@ -223,7 +223,7 @@
 									echo "-";
 								} else {
 									$percentage = ($grandTotal/$total)*100;
-									$percent = round($percentage,2);
+									$percent = round($percentage);
 									echo $percent;
 									$percentArray[$std] = $percent;
 								}
@@ -333,9 +333,10 @@
 			$percentArray = $_POST["percentArray"];
 			$grandTotalArray = $_POST["grandTotalArray"];
 			$stdCount = $_POST["stdCount"];
+			
 			$transection = Yii::$app->db->beginTransaction();
-		try
-		{
+			try
+			{
 			for($i=0; $i<$stdCount; $i++){
 			$marksHeadUpdate = Yii::$app->db->createCommand()->update('marks_head', 				[
 						'grand_total' 	=> $grandTotalArray[$i],
@@ -385,7 +386,7 @@
 			catch(Exception $e)
 			{
 				$transection->rollback();
-				//echo $e;
+				echo $e;
 				Yii::$app->session->setFlash('warning', "Result not Prepeared. Try again!");
 			} // end of catch
 		} // end of else
