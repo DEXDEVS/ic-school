@@ -31,7 +31,7 @@ class StdEnrollmentHeadController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete', 'bulk-delete','std-enrollment-detail','std-promote','id-card-index'],
+                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete', 'bulk-delete','std-enrollment-detail','std-promote','id-card-index','id-card-view'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -82,6 +82,11 @@ class StdEnrollmentHeadController extends Controller
     public function actionView($id)
     { 
         return $this->render('std-enrollment-detail');
+    }
+
+    public function actionIdCardView($id)
+    { 
+        return $this->render('id-card-view');
     }
 
     public function actionStdPromote()

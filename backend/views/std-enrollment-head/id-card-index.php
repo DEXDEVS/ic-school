@@ -22,14 +22,14 @@ CrudAsset::register($this);
         color: white;
     }
 </style>
-<div class="std-enrollment-head-index">
+<div class="ID-Cards-index">
     <div id="ajaxCrudDatatable">
         <?=GridView::widget([
             'id'=>'crud-datatable',
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'pjax'=>true,
-            'columns' => require(__DIR__.'/_columns.php'),
+            'columns' => require(__DIR__.'/_columns-idcard.php'),
             'toolbar'=> [
                 ['content'=>
                     Html::a('<i class="glyphicon glyphicon-plus"></i>', ['std-enrollment-detail/create'],
