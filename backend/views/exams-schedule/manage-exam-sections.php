@@ -26,7 +26,7 @@
 <div class="container-fluid">
 	<div class="row">
 		
-			<form method="POST" action="">
+			<form method="POST" action="manage-exams">
 	<?php 
 		//fetch sections against class_name_id
 		$class_sections = Yii::$app->db->createCommand("SELECT std_enroll_head_id, std_enroll_head_name,branch_id
@@ -99,9 +99,16 @@
 												<label>Select Invigilator</label>
 												<select name="Invagilator[<?php echo $i; ?>][<?php echo $j; ?>]" class="form-control" >
 											<?php 	$teacher = Yii::$app->db->createCommand("
-													SELECT emp_id,emp_name
-													FROM emp_info WHERE group_by ='Faculty' AND emp_branch_id = '$branchSections'
+													SELECT emp.emp_id, emp.emp_name 
+													FROM emp_info as emp 
+													INNER JOIN emp_designation as empd 
+													ON emp.emp_id = empd.emp_id 
+													WHERE emp.emp_status = 'Active' 
+													AND emp.emp_branch_id = '$branchSections' 
+													AND empd.group_by ='Faculty' 
+													AND  empd.status = 'Active'
 													")->queryAll();
+											var_dump($teacher);
 													$countteacher = count($teacher); ?>
 
 													<option value="">Select invagilator</option>
@@ -167,109 +174,4 @@
 </html>
 <?php
 }//closing of save isset
-
-if(isset($_POST['save_datesheet']))
-{
-		// exams criteria data
-		$exam_category 		= $_POST["exam_category"];
-		$classId 			= $_POST["classId"];
-		$exam_start_date 	= $_POST["exam_start_date"];
-		$exam_end_date 		= $_POST["exam_end_date"];
-		$exam_type			= $_POST["exam_type"];
-		// getting exam schedule fields
-		$subarray 			= $_POST["subarray"];
-		$date 				= $_POST["date"];
-		$fullmarks 			= $_POST["fullmarks"];
-		$passingmarks 		= $_POST["passingmarks"];
-		$subjCount 			= $_POST["subjCount"];
-		$exam_start_time 	= $_POST["exam_start_time"];
-		$exam_end_time 		= $_POST["exam_end_time"]; 
-		// exam room data
-		$countSection 		= $_POST["countSection"];
-		$room 				= $_POST["room"];
-		$Invagilator 		= $_POST["Invagilator"];
-		$classSectionID 	= $_POST["classSectionID"];
-	
-	$transection = Yii::$app->db->beginTransaction();
-	try{
-		$inactive = "Inactive";
-		$examCriteria = Yii::$app->db->createCommand()->insert('exams_criteria',[
-    			'exam_category_id' 		=> $exam_category,
-				'class_id' 				=> $classId ,
-				'exam_start_date' 		=> $exam_start_date,
-				'exam_end_date'			=> $exam_end_date ,
-				'exam_status'			=> $inactive,
-				'exam_type'				=> $exam_type,
-				'created_at'			=> new \yii\db\Expression('NOW()'),
-				'created_by'			=> Yii::$app->user->identity->id, 
-			])->execute();
-		if ($examCriteria) {
-			$examCriteriaId = Yii::$app->db->createCommand("SELECT exam_criteria_id
-			FROM  exams_criteria
-			WHERE exam_category_id 		= '$exam_category' AND
-				  class_id 				= '$classId' AND
-				  exam_start_date 		= '$exam_start_date' AND
-				  exam_end_date 		= '$exam_end_date' AND
-				  exam_status			= '$inactive' AND
-				  exam_type				= '$exam_type'
-			")->queryAll();
-
-			$criteriaId = $examCriteriaId[0]['exam_criteria_id'];
-			
-			for ($i=0; $i <$subjCount ; $i++) { 
-				$examSchedule = Yii::$app->db->createCommand()->insert('exams_schedule',[
-	            			'exam_criteria_id' 	=> $criteriaId,
-							'subject_id' 		=> $subarray[$i],
-							'date'				=> $date[$i],
-							'exam_start_time'	=> $exam_start_time[$i],
-							'exam_end_time'		=> $exam_end_time[$i],
-							'full_marks'		=> $fullmarks[$i],
-							'passing_marks'		=> $passingmarks[$i],
-							'status'			=> "not",
-							'created_at'		=> new \yii\db\Expression('NOW()'),
-							'created_by'		=> Yii::$app->user->identity->id, 
-						])->execute();
-
-				if ($examSchedule) {
-					$examScheduleId = Yii::$app->db->createCommand("SELECT exam_schedule_id
-					FROM  exams_schedule as s
-					WHERE s.exam_criteria_id 		= '$criteriaId' AND
-						  s.subject_id 				= '$subarray[$i]' AND
-						  s.date 					= '$date[$i]' AND
-						  s.exam_start_time 		= '$exam_start_time[$i]' AND
-						  s.exam_end_time			= '$exam_end_time[$i]' AND
-						  s.full_marks				= '$fullmarks[$i]' AND
-						  s.passing_marks			= '$passingmarks[$i]' AND
-						  s.status					= 'not'
-					")->queryAll();
-
-
-					$scheduleId = $examScheduleId[0]['exam_schedule_id'];
-					
-					for ($j=0; $j <$countSection ; $j++) { 
-						$examRoom = Yii::$app->db->createCommand()->insert('exams_room',[
-	            			'exam_schedule_id' 	=> $scheduleId,
-							'class_head_id' 	=> $classSectionID[$j],
-							'exam_room'			=> $room[$j][$i],
-							'emp_id'			=> $Invagilator[$j][$i],
-							'created_at'		=> new \yii\db\Expression('NOW()'),
-							'created_by'		=> Yii::$app->user->identity->id, 
-						])->execute();
-					}// closing of for loop j
-				}//closing of exam schedule
-			} // closing of for loop i
-			if($examRoom){
-				$transection->commit();
-				Yii::$app->session->setFlash('success', "Exams Schedule managed successfully...!");
-			}
-		} // closing of exam criteria
-	//closing of try block
-	} catch(Exception $e){
-		$transection->rollback();
-		echo $e;
-		Yii::$app->session->setFlash('warning', "Exam Schedule not managed. Try again!");
-	}
-}
-// closing of isset
 ?>
-

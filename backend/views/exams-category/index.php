@@ -38,7 +38,7 @@ CrudAsset::register($this);
                     ['data-pjax'=>1, 'class'=>'btn btn-warning', 'title'=>'Reset Grid']).
                     '{toggleData}'.
                     '{export}'
-                ],
+               ],
             ],          
             'striped' => true,
             'condensed' => true,

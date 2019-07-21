@@ -4,23 +4,23 @@
 	$currentYear = date('Y');
 
 	//getting scheduled classes
-	$inactiveSchedules = Yii::$app->db->createCommand("SELECT class_id, exam_type, YEAR(exam_start_date), YEAR(exam_end_date) FROM exams_criteria WHERE exam_category_id = 5 AND exam_status = 'Inactive' AND ( YEAR(exam_start_date) = $currentYear OR YEAR(exam_end_date) = $currentYear )
+	$inactiveSchedules = Yii::$app->db->createCommand("SELECT class_id, exam_type, YEAR(exam_start_date), YEAR(exam_end_date) FROM exams_criteria WHERE exam_category_id = '$examCateogryId' AND exam_status = 'Inactive' AND ( YEAR(exam_start_date) = $currentYear OR YEAR(exam_end_date) = $currentYear )
 					")->queryAll();
 	$countinactiveSchedules = count($inactiveSchedules);
 
-	$announcedSchedules = Yii::$app->db->createCommand("SELECT class_id, exam_type, YEAR(exam_start_date), YEAR(exam_end_date) FROM exams_criteria WHERE exam_category_id = 5 AND exam_status = 'Announced' AND ( YEAR(exam_start_date) = $currentYear OR YEAR(exam_end_date) = $currentYear )
+	$announcedSchedules = Yii::$app->db->createCommand("SELECT class_id, exam_type, YEAR(exam_start_date), YEAR(exam_end_date) FROM exams_criteria WHERE exam_category_id = '$examCateogryId' AND exam_status = 'Announced' AND ( YEAR(exam_start_date) = $currentYear OR YEAR(exam_end_date) = $currentYear )
 					")->queryAll();
 	$countannouncedSchedules = count($announcedSchedules);
 
-	$conductedSchedules = Yii::$app->db->createCommand("SELECT class_id, exam_type, YEAR(exam_start_date), YEAR(exam_end_date) FROM exams_criteria WHERE exam_category_id = 5 AND exam_status = 'Conducted' AND ( YEAR(exam_start_date) = $currentYear OR YEAR(exam_end_date) = $currentYear )
+	$conductedSchedules = Yii::$app->db->createCommand("SELECT class_id, exam_type, YEAR(exam_start_date), YEAR(exam_end_date) FROM exams_criteria WHERE exam_category_id = '$examCateogryId' AND exam_status = 'Conducted' AND ( YEAR(exam_start_date) = $currentYear OR YEAR(exam_end_date) = $currentYear )
 					")->queryAll();
 	$countconductedSchedules = count($conductedSchedules);
 
-	$ResultPrepareSchedules = Yii::$app->db->createCommand("SELECT class_id, exam_type, YEAR(exam_start_date), YEAR(exam_end_date) FROM exams_criteria WHERE exam_category_id = 5 AND exam_status = 'Result Prepared' AND ( YEAR(exam_start_date) = $currentYear OR YEAR(exam_end_date) = $currentYear )
+	$ResultPrepareSchedules = Yii::$app->db->createCommand("SELECT class_id, exam_type, YEAR(exam_start_date), YEAR(exam_end_date) FROM exams_criteria WHERE exam_category_id = '$examCateogryId' AND exam_status = 'Result Prepared' AND ( YEAR(exam_start_date) = $currentYear OR YEAR(exam_end_date) = $currentYear )
 					")->queryAll();
 	$countResultPrepareSchedules = count($ResultPrepareSchedules);
 
-	$ResultAnnouncedSchedules = Yii::$app->db->createCommand("SELECT class_id, exam_type, YEAR(exam_start_date), YEAR(exam_end_date) FROM exams_criteria WHERE exam_category_id = 5 AND exam_status = 'Result Announced' AND ( YEAR(exam_start_date) = $currentYear OR YEAR(exam_end_date) = $currentYear )
+	$ResultAnnouncedSchedules = Yii::$app->db->createCommand("SELECT class_id, exam_type, YEAR(exam_start_date), YEAR(exam_end_date) FROM exams_criteria WHERE exam_category_id = '$examCateogryId' AND exam_status = 'Result Announced' AND ( YEAR(exam_start_date) = $currentYear OR YEAR(exam_end_date) = $currentYear )
 					")->queryAll();
 	$countResultAnnouncedSchedules = count($ResultAnnouncedSchedules);
 

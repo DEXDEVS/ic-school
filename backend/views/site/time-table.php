@@ -16,7 +16,7 @@ use kartik\select2\Select2;
 				</div>
 			</div>
 			<div class="row">
-				<form method="post" action="time-table">
+				<form method="post" >
 					<input type="hidden" name="_csrf" class="form-control" value="<?=Yii::$app->request->getCsrfToken()?>">
 					<div class="col-md-4">
 						<div class="form-group">
@@ -64,6 +64,12 @@ if(isset($_POST['get_subjects'])){
 	$days = implode(",", $days);
 	//print_r($days);
 
+	$classSchedule = Yii::$app->db->createCommand("SELECT * FROM time_table_head WHERE class_id = '$classId' AND days = '$days' AND status = 'Active' ")->queryAll();
+
+	if (!empty($classSchedule)) {
+		Yii::$app->session->setFlash('warning', "Schedule already Active");
+	}else{
+
 	$classNameId = Yii::$app->db->createCommand("SELECT class_name_id FROM std_enrollment_head WHERE std_enroll_head_id = '$classId' ")->queryAll();
 	$classNameID = $classNameId[0]['class_name_id'];
 	$className = Yii::$app->db->createCommand("SELECT std_enroll_head_name FROM std_enrollment_head WHERE std_enroll_head_id = '$classId' ")->queryAll();
@@ -75,93 +81,150 @@ if(isset($_POST['get_subjects'])){
 
 	?>
 	<div class="container-fluid">
-		<div class="box box-default">
-			<div class="box-body">
-				<div class="row">
-					<div class="col-md-12">
-						<h2 class="well well-sm">Time Table Schedule</h2>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<h3 class="well well-sm">
-							<span style="background-color:#587899;color:white;padding: 7px;border-radius:50%;">Class :</span> <?php echo $className[0]['std_enroll_head_name']; ?>
-						</h3>
-					</div>
-					<div class="col-md-6">
-						<h3 class="well well-sm">
-							<span style="background-color:#587899;color:white;padding: 7px;border-radius:50%;">Days :</span> <?php echo $days; ?>
-						</h3>
-					</div>
-				</div>
-			 <form action="time-table" method="post">
-				<?php 
+	<form action="time-table" method="post">
+		<div class="row">
+			<div class="col-md-3">
+				<div class="box box-dwfault">
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-12">
+								<h2 class="well well-sm">Break Time</h2>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>Start Time</label>
+									<input type="time" name="break_start" class="form-control">
+								</div>
+								<div class="form-group">
+									<label>End Time</label>
+									<input type="time" name="break_end" class="form-control">
+								</div>
+								<div class="form-group">
+									<label>Priority</label>
+									<select name="break_priority" class="form-control" required="">
+										<option value="">Select Priority</option>
+										<?php 
+										for ($p=0; $p <=$subjectArrayCount ; $p++) { 
 
-				for ($j=0; $j <$subjectArrayCount ; $j++) { 
-					$subName = $subjectArray[$j];
-					$subjectIDs = Yii::$app->db->createCommand("SELECT subject_id FROM subjects WHERE subject_name = '$subName' ")->queryAll();
-					$subIdArray[$j] = $subjectIDs[0]['subject_id'];
-				?>
-				<br>
-				<div class="row">
-					<div class="col-md-12">
-						<p style="background-color:#587899;color:white;padding:10px;border-radius:10px;text-align: center;font-size:20px; ">
-							<?php echo $subName; ?>
-						</p>
+										 ?>
+										<option value="<?php echo $p+1;?>">
+											<?php echo "Priority".($p+1); ?>
+										</option>
+										<?php } ?>
+									</select>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-md-3">
-						<label>Start Time</label>
-						<input type="time" name="start_time[]" class="form-control">
-					</div>
-					<div class="col-md-3">
-						<label>End Time</label>
-						<input type="time" name="end_time[]" class="form-control">
-					</div>
-					<div class="col-md-3" style="border-right:1px solid;">
-						<label>Rooms</label>
-						<select name="rooms[]" class="form-control">
-							<option>Select Room</option>
-							<?php 
-							$rooms = Yii::$app->db->createCommand("SELECT room_id,room_name FROM rooms ")->queryAll();
-							$countRooms = count($rooms);
-							for ($k=0; $k <$countRooms ; $k++) { 
-								$roomId 	= $rooms[$k]['room_id'];
-								$roomName 	= $rooms[$k]['room_name'];
+			</div>
+			<div class="col-md-9">
+				<div class="box box-default">
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-12">
+								<h2 class="well well-sm">Time Table Schedule</h2>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<span style="background-color:#587899;color:white;padding: 7px;border-radius:50%;">Class :</span> 
+								<h3 class="well well-sm">
+									<?php echo $className[0]['std_enroll_head_name']; ?>
+								</h3>
+							</div>
+							<div class="col-md-6">
+								<span style="background-color:#587899;color:white;padding: 7px;border-radius:50%;">Days :</span>
+								<h3 class="well well-sm">
+									 <?php echo $days; ?>
+								</h3>
+							</div>
+						</div>
+						<?php 
 
-							 ?>
-							<option value="<?php echo $roomId; ?>">
-								<?php echo $roomName; ?>
-							</option>	
-							<<?php } ?>
-						</select>
-					</div>
-					<div class="col-md-3"><br>
-						<input type="radio" name="on_off[<?php echo $j;?>]" value="1" checked> ON
-						<input type="radio" name="on_off[<?php echo $j;?>]" value="0"> Off
+						for ($j=0; $j <$subjectArrayCount ; $j++) { 
+							$subName = $subjectArray[$j];
+							$subjectIDs = Yii::$app->db->createCommand("SELECT subject_id FROM subjects WHERE subject_name = '$subName' ")->queryAll();
+							$subIdArray[$j] = $subjectIDs[0]['subject_id'];
+						?>
+						<br>
+						<div class="row">
+							<div class="col-md-12">
+								<p style="background-color:#587899;color:white;padding:10px;border-radius:10px;text-align: center;font-size:20px; ">
+									<?php echo $subName; ?>
+								</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<label>Start Time</label>
+								<input type="time" name="start_time[]" class="form-control" id="start_time<?php echo $j;?>">
+								<label>End Time</label>
+								<input type="time" name="end_time[]" class="form-control" id="end_time<?php echo $j;?>">
+							</div>
+							<div class="col-md-4" style="border-right:1px solid;">
+								<label>Rooms</label>
+								<select name="rooms[]" class="form-control" id="room<?php echo $j;?>">
+									<option>Select Room</option>
+									<?php 
+									$rooms = Yii::$app->db->createCommand("SELECT room_id,room_name FROM rooms ")->queryAll();
+									$countRooms = count($rooms);
+									for ($k=0; $k <$countRooms ; $k++) { 
+										$roomId 	= $rooms[$k]['room_id'];
+										$roomName 	= $rooms[$k]['room_name'];
+
+									 ?>
+									<option value="<?php echo $roomId; ?>">
+										<?php echo $roomName; ?>
+									</option>	
+									<<?php } ?>
+								</select>
+								<label>Priority</label>
+								<select name="priority[]" class="form-control" required="" id="priority<?php echo $j;?>">
+									<option value="" >Select Priority</option>
+									<?php 
+									for ($p=0; $p <=$subjectArrayCount ; $p++) { 
+
+									 ?>
+									<option value="<?php echo $p+1;?>">
+										<?php echo "Priority".($p+1); ?>
+									</option>
+									<?php } ?>
+								</select>
+							</div>
+							<div class="col-md-4"><br>
+								<input type="radio" name="on_off[<?php echo $j;?>]" value="1" checked onclick="on(<?php echo $j;?>)"> ON
+								<input type="radio" name="on_off[<?php echo $j;?>]" value="0" onclick="off(<?php echo $j;?>)" > Off
+							</div>
+						</div>
+						<?php } // subject loop close ?>
+						<br>
+						<hr>
+						<div class="row">
+							<div class="col-md-12">
+								<button style="float:right;" type="submit" name="insert_time_table" class="btn btn-success">Save Time Table</button>
+							</div>
+						</div>
+						<?php 
+						foreach ($subIdArray as $key => $value) { ?>
+							<input type="hidden" name="subIdArray[]" value="<?php echo $value;?>">
+						<?php } ?>
+						<input type="hidden" name="classID" value="<?php echo $classId ;?>">
+						<input type="hidden" name="days" value="<?php echo $days ;?>">
+						<input type="hidden" name="subjectArrayCount" value="<?php echo $subjectArrayCount ;?>">
 					</div>
 				</div>
-				<?php } // subject loop close ?>
-				<br>
-				<hr>
-				<div class="row">
-					<div class="col-md-12">
-						<button style="float:right;" type="submit" name="insert_time_table" class="btn btn-success">Save Time Table</button>
-					</div>
-				</div>
-				<?php 
-				foreach ($subIdArray as $key => $value) { ?>
-					<input type="hidden" name="subIdArray[]" value="<?php echo $value;?>">
-				<?php } ?>
-				<input type="hidden" name="classID" value="<?php echo $classId ;?>">
-				<input type="hidden" name="days" value="<?php echo $days ;?>">
-				<input type="hidden" name="subjectArrayCount" value="<?php echo $subjectArrayCount ;?>">
-			</form>
 			</div>
 		</div>
-	</div>
-<?php } ?>
+	</form>
+	</div> 
+	<!-- Container fluid close -->
+ <?php 
+} // closing of else
+}  //closing of isset
+?>
 <?php 
 	if(isset($_POST["insert_time_table"]))
 	{
@@ -175,6 +238,12 @@ if(isset($_POST['get_subjects'])){
 		$days 			= $_POST['days'];
 
 		$status = $_POST['on_off'];
+		$break_start = $_POST['break_start'];
+		$break_end = $_POST['break_end'];
+
+		$break_priority = $_POST['break_priority'];
+		$priority = $_POST['priority'];
+
 
 		$transection = Yii::$app->db->beginTransaction();
 		try {
@@ -205,12 +274,39 @@ if(isset($_POST['get_subjects'])){
 							'start_time'		=> $start_time[$n],
 							'end_time'			=> $end_time[$n],
 							'room'				=> $room[$n],
+							'priority'			=> $priority[$n],
+							'status'			=> $status[$n],
+							'created_at'		=> new \yii\db\Expression('NOW()'),
+							'created_by'		=> Yii::$app->user->identity->id, 
+						])->execute();
+					}
+					if ($status[$n] == 0) {
+						$timeTableDetail = Yii::$app->db->createCommand()->insert('time_table_detail',[
+	            			'time_table_h_id' 	=> $timeTableHId,
+							'subject_id' 		=> $subIdArray[$n],
+							'start_time'		=> '',
+							'end_time'			=> '',
+							'room'				=> '',
+							'priority'			=> $priority[$n],
 							'status'			=> $status[$n],
 							'created_at'		=> new \yii\db\Expression('NOW()'),
 							'created_by'		=> Yii::$app->user->identity->id, 
 						])->execute();
 					}
 				} // closing of for loop
+				if (!empty($break_start) && !empty($break_end)) {
+					$timeTableDetail = Yii::$app->db->createCommand()->insert('time_table_detail',[
+	            			'time_table_h_id' 	=> $timeTableHId,
+							'subject_id' 		=> '',
+							'start_time'		=> $break_start,
+							'end_time'			=> $break_end,
+							'room'				=> '',
+							'status'			=> 2,
+							'priority'			=> $break_priority,
+							'created_at'		=> new \yii\db\Expression('NOW()'),
+							'created_by'		=> Yii::$app->user->identity->id, 
+						])->execute();
+				}
 					if ($timeTableDetail) {
 					$transection->commit();
 					Yii::$app->session->setFlash('success', "Time Table Mamaged successfully...!");
@@ -227,3 +323,18 @@ if(isset($_POST['get_subjects'])){
  ?>
 </body>
 </html>
+<script type="text/javascript">
+	function on(j){
+		$('#start_time'+j). prop("disabled", false);
+		$('#end_time'+j). prop("disabled", false);
+		$('#room'+j). prop("disabled", false);
+		//$('#priority'+j). prop("disabled", false);
+	}
+	function off(k){
+		$('#start_time'+k). prop("disabled", true);
+		$('#end_time'+k). prop("disabled", true);
+		$('#room'+k). prop("disabled", true);
+		//$('#priority'+k). prop("disabled", true);
+	}
+	
+</script>	

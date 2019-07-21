@@ -25,7 +25,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
         </div>
         <div class="col-md-4">
             <?= $form->field($model, 'class_id')->dropDownList(
-                    ArrayHelper::map(StdClassName::find()->where(['class_type'=>'College'])->all(),'class_name_id','class_name'),
+                    ArrayHelper::map(StdClassName::find()->where(['class_type'=>'school'])->all(),'class_name_id','class_name'),
                         ['prompt'=>'Select Class', 'id'=>'classId']
                 )?>
         </div>

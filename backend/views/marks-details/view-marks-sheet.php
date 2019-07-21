@@ -141,7 +141,8 @@
 						<p><?php echo $className[0]['std_enroll_head_name']; ?></p>
 					</div>
 				</div><hr>
-				<table class="table table-hover table-bordered">
+				<div class="table-responsive">
+				<table class="table table-hover table-bordered table-responsive">
 					<thead>
 						<tr>
 							<!-- <th colspan="2" style="text-align: center;">Teacher Name</th> -->
@@ -255,8 +256,10 @@
 									echo "-";
 								} else {
 									$percentage = ($grandTotal/$total)*100;
-									$percent = round($percentage,2);
-									echo $percent;
+									//$percent = round($percentage);
+									//echo $percent;
+									//$p = ceil($percentage);
+									//echo $p;
 									$percentArray[$std] = $percent;
 								}
 								 ?></td>
@@ -265,6 +268,7 @@
 								if($resultCounter >0 ){
 									echo "-";
 								} else {
+
 								 	$grades = Yii::$app->db->createCommand("SELECT grade_name FROM grades WHERE grade_from <= '$percent' AND grade_to >= '$percent'")->queryAll();
 								 	if(empty($grades)){
 								 		echo "-";
@@ -302,7 +306,9 @@
 						</tr>
 					<?php } ?>
 					</tbody>
-				</table><br>
+				</table>
+				</div>
+				<br>
 				<?php foreach ($grandTotalArray as $value) {
 			        		echo '<input type="hidden" name="grandTotalArray[]" value="'.$value.'" style="width: 30px">';
 			        	}
