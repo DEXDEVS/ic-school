@@ -31,7 +31,7 @@ class StdEnrollmentHeadController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete', 'bulk-delete','std-enrollment-detail','std-promote'],
+                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete', 'bulk-delete','std-enrollment-detail','std-promote','id-card-index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -57,6 +57,17 @@ class StdEnrollmentHeadController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    //Index function route for class ID Cards
+    public function actionIdCardIndex()
+    {    
+        $searchModel = new StdEnrollmentHeadSearch();
+        $dataProvider = $searchModel->searchIdCard(Yii::$app->request->queryParams);
+
+        return $this->render('id-card-index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
