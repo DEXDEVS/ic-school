@@ -43,7 +43,7 @@ class EmpLeave extends \yii\db\ActiveRecord
             [['leave_type', 'starting_date', 'ending_date','no_of_days', 'leave_purpose'], 'required'],
             [['no_of_days', 'created_by', 'updated_by'], 'integer'],
             [['leave_type'], 'string'],
-            [['emp_id', 'starting_date', 'ending_date', 'applying_date', 'created_at', 'updated_at', 'status', 'remarks', 'created_by', 'updated_by','branch_id'], 'safe'],
+            [['emp_id','emp_name','starting_date', 'ending_date', 'applying_date', 'created_at', 'updated_at', 'status', 'remarks', 'created_by', 'updated_by','branch_id'], 'safe'],
             [['leave_purpose'], 'string', 'max' => 100],
             [['status'], 'string'],
             [['remarks'], 'string', 'max' => 200],
@@ -58,7 +58,8 @@ class EmpLeave extends \yii\db\ActiveRecord
     {
         return [
             'app_id' => 'App ID',
-            'emp_id' => 'Employee Name',
+            'emp_id' => 'Employee ID',
+            'emp_name' => 'Employee Name',
             'leave_type' => 'Leave Type',
             'starting_date' => 'Starting Date',
             'ending_date' => 'Ending Date',

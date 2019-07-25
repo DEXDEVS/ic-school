@@ -20,12 +20,12 @@ use yii\helpers\Url;
 <head>
     <title></title>
      <style>
-      * {
+      /** {
           color:#7F7F7F;
           font-family:Arial,sans-serif;
           font-size:12px;
           font-weight:normal;
-      }    
+      }  */  
       #config{
           overflow: auto;
           margin-bottom: 10px;

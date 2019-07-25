@@ -1,4 +1,118 @@
 <?php 
+
+use yii\helpers\ArrayHelper;
+	if(isset($_GET['teacherHeadId'])) { 
+
+		$teacherHeadId = $_GET['teacherHeadId'];
+
+		$teacherName = Yii::$app->db->createCommand("SELECT * FROM teacher_subject_assign_head as tsah WHERE tsah.teacher_subject_assign_head_id = '$teacherHeadId'")->queryAll();
+
+		$teacherDetails = Yii::$app->db->createCommand("SELECT * FROM teacher_subject_assign_detail as tsad WHERE teacher_subject_assign_detail_head_id = '$teacherHeadId'")->queryAll();
+		//print_r($teacherDetails);
+		$countTeacherDetails = count($teacherDetails);
+
+
+	?>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<!-- back button start -->
+				 <ol class="breadcrumb">
+			      <li><a class="btn btn-primary btn-xs" href="time-table-view"><i class="fa fa-backward"></i> Back</a></li>
+			    </ol>
+				<!-- back button close -->
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h3 class="well well-sm">
+					<?php echo $teacherName[0]['teacher_subject_assign_head_name']; ?>
+				</h3>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<?php 
+							$daysArray = array();
+							for ($s=0; $s <$countTeacherDetails ; $s++) { 
+
+								$classID   = $teacherDetails[$s]['class_id'];
+								
+								$subjectID = $teacherDetails[$s]['subject_id'];
+
+								$daySchedule = Yii::$app->db->createCommand("SELECT th.days,th.class_id,td.subject_id,td.start_time,td.end_time,td.room,td.status,td.priority,th.time_table_h_id,th.class_id
+								FROM time_table_detail as td
+								INNER JOIN time_table_head as th
+								ON th.time_table_h_id = td.time_table_h_id
+								WHERE th.class_id = '$classID'
+								AND th.status = 'Active'
+								AND td.subject_id = '$subjectID'")->queryAll();
+
+								
+								if(!empty($daySchedule)){
+									
+									foreach ($daySchedule as $key => $value) {
+										$daysArray[$s] = $value;
+									}
+								}
+							} //closing of $s loop 
+print_r($daySchedule);
+							?>
+							<tr>
+							<!-- <th style="background-color:#849db7;color:white;text-align:center;">Days</th> -->
+							<th colspan="<?php echo $countTeacherDetails; ?>" style="text-align: center;background-color:lightgray;"><b style="background-color:#849db7;color:white;padding:10px;">Days : </b><?php echo "&nbsp;".$daysArray[0]['days']; ?></th>
+						</tr>
+							<?php
+							ArrayHelper::multisort($daysArray, ['priority'], [SORT_ASC]);
+							foreach ($daysArray as $key => $value) {
+								$subID = $value['subject_id'];
+								$priority = $value['priority'];
+								$classID = $value['class_id'];
+
+								$className = Yii::$app->db->createCommand("SELECT * FROM std_enrollment_head WHERE std_enroll_head_id = '$classID ' ")->queryAll();
+								$subName = Yii::$app->db->createCommand("SELECT subject_name FROM subjects WHERE subject_id = '$subID ' ")->queryAll();
+								$status = $value['status'];
+								if ($status == 1) {
+
+							 ?>
+							
+							<td style="text-align:center;">
+								<h4>
+									<?php echo "Lecture #: ".$priority; ?>
+								</h4>
+								<p>
+									<?php echo "<b><u>Class : </u></b>".$className[0]['std_enroll_head_name']; ?>
+								</p>
+								<p>
+									<?php 
+									if (empty($subName[0]['subject_name'])) {
+										echo "---";
+									}
+									else{
+										echo "<b>Subject:</b> ".$subName[0]['subject_name'];
+									}
+
+									 ?>	
+								</p>
+								<p><?php echo "<b>Time :</b> ".$value['start_time']." TO ".$value['end_time'];  ?></p>
+								<p><?php echo "<b>Room.# </b>"."<span class='label label-success'>".$value['room']."</span>";  ?></p>
+							</td>
+							<?php } // closing of if to check subject status
+							} // closing if foreach loop 
+							
+							 ?>
+						</tr>
+						<!-- Monday Details end -->
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+<?php } // closing of teacher if isset ?>
+<?php 
 if(isset($_GET['classHeadID'])){
 	// getting class Head id
 	$classHeadID = $_GET['classHeadID'];
@@ -27,6 +141,11 @@ if(isset($_GET['classHeadID'])){
 </head>
 <body>
 <div class="container-fluid">
+	<!-- back button start -->
+	 <ol class="breadcrumb">
+      <li><a class="btn btn-primary btn-xs" href="time-table-view"><i class="fa fa-backward"></i> Back</a></li>
+    </ol>
+	<!-- back button close -->
 	<div class="row">
 		<div class="col-md-12">
 			<h3 class="well well-sm">

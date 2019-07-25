@@ -31,7 +31,7 @@ class EmpLeaveController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete', 'bulk-delete'],
+                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete', 'bulk-delete','leave-index','leave-report'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -51,6 +51,12 @@ class EmpLeaveController extends Controller
      * Lists all EmpLeave models.
      * @return mixed
      */
+     public function actionLeaveReport()
+    {
+       return $this->render('leave-report'); 
+    }
+
+
 
     public function actionIndex()
     {    
@@ -58,6 +64,17 @@ class EmpLeaveController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionLeaveIndex()
+    {    
+        $searchModel = new EmpLeaveSearch();
+        $dataProvider = $searchModel->leaveSearch(Yii::$app->request->queryParams);
+
+        return $this->render('leave-index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

@@ -1,7 +1,7 @@
 <?php 
 
 	$examCateogryId = $_GET['id'];
-	echo $examCateogryId;
+	//echo $examCateogryId;
 	$examCatName = Yii::$app->db->createCommand("SELECT category_name FROM exams_category WHERE exam_category_id = '$examCateogryId'")->queryAll();
 	
 

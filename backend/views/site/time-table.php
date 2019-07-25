@@ -81,7 +81,7 @@ if(isset($_POST['get_subjects'])){
 
 	?>
 	<div class="container-fluid">
-	<form action="time-table" method="post">
+	<form action="time-table" method="post" id="form_submit">
 		<div class="row">
 			<div class="col-md-3">
 				<div class="box box-dwfault">
@@ -161,8 +161,10 @@ if(isset($_POST['get_subjects'])){
 							<div class="col-md-4">
 								<label>Start Time</label>
 								<input type="time" name="start_time[]" class="form-control" id="start_time<?php echo $j;?>">
+								<input type="hidden" name="start_time[]" value="<?php echo null; ?>" id="start<?php echo $j;?>" disabled>
 								<label>End Time</label>
 								<input type="time" name="end_time[]" class="form-control" id="end_time<?php echo $j;?>">
+								<input type="hidden" name="end_time[]" value="<?php echo null; ?>" id="end<?php echo $j;?>" disabled>
 							</div>
 							<div class="col-md-4" style="border-right:1px solid;">
 								<label>Rooms</label>
@@ -181,6 +183,8 @@ if(isset($_POST['get_subjects'])){
 									</option>	
 									<<?php } ?>
 								</select>
+
+								<input type="hidden" name="rooms[]" value="<?php echo null; ?>" id="rom<?php echo $j;?>" disabled>
 								<label>Priority</label>
 								<select name="priority[]" class="form-control" required="" id="priority<?php echo $j;?>">
 									<option value="" >Select Priority</option>
@@ -193,6 +197,7 @@ if(isset($_POST['get_subjects'])){
 									</option>
 									<?php } ?>
 								</select>
+
 							</div>
 							<div class="col-md-4"><br>
 								<input type="radio" name="on_off[<?php echo $j;?>]" value="1" checked onclick="on(<?php echo $j;?>)"> ON
@@ -238,12 +243,11 @@ if(isset($_POST['get_subjects'])){
 		$days 			= $_POST['days'];
 
 		$status = $_POST['on_off'];
+
 		$break_start = $_POST['break_start'];
 		$break_end = $_POST['break_end'];
-
 		$break_priority = $_POST['break_priority'];
 		$priority = $_POST['priority'];
-
 
 		$transection = Yii::$app->db->beginTransaction();
 		try {
@@ -264,35 +268,19 @@ if(isset($_POST['get_subjects'])){
 				")->queryAll();
 
 				$timeTableHId = $timeTableHeadId[0]['time_table_h_id'];
-				//echo $timeTableHId;
 
 				for ($n=0; $n <$subjectArrayCount ; $n++) {
-					if ($status[$n] == 1) {
-						$timeTableDetail = Yii::$app->db->createCommand()->insert('time_table_detail',[
-	            			'time_table_h_id' 	=> $timeTableHId,
-							'subject_id' 		=> $subIdArray[$n],
-							'start_time'		=> $start_time[$n],
-							'end_time'			=> $end_time[$n],
-							'room'				=> $room[$n],
-							'priority'			=> $priority[$n],
-							'status'			=> $status[$n],
-							'created_at'		=> new \yii\db\Expression('NOW()'),
-							'created_by'		=> Yii::$app->user->identity->id, 
-						])->execute();
-					}
-					if ($status[$n] == 0) {
-						$timeTableDetail = Yii::$app->db->createCommand()->insert('time_table_detail',[
-	            			'time_table_h_id' 	=> $timeTableHId,
-							'subject_id' 		=> $subIdArray[$n],
-							'start_time'		=> '',
-							'end_time'			=> '',
-							'room'				=> '',
-							'priority'			=> $priority[$n],
-							'status'			=> $status[$n],
-							'created_at'		=> new \yii\db\Expression('NOW()'),
-							'created_by'		=> Yii::$app->user->identity->id, 
-						])->execute();
-					}
+					$timeTableDetail = Yii::$app->db->createCommand()->insert('time_table_detail',[
+            			'time_table_h_id' 	=> $timeTableHId,
+						'subject_id' 		=> $subIdArray[$n],
+						'start_time'		=> $start_time[$n],
+						'end_time'			=> $end_time[$n],
+						'room'				=> $room[$n],
+						'priority'			=> $priority[$n],
+						'status'			=> $status[$n],
+						'created_at'		=> new \yii\db\Expression('NOW()'),
+						'created_by'		=> Yii::$app->user->identity->id, 
+					])->execute();
 				} // closing of for loop
 				if (!empty($break_start) && !empty($break_end)) {
 					$timeTableDetail = Yii::$app->db->createCommand()->insert('time_table_detail',[
@@ -315,7 +303,7 @@ if(isset($_POST['get_subjects'])){
 		} // closing of try
 		catch (Exception $e) {
 			$transection->rollback();
-			echo $e;
+			//echo $e;
 			Yii::$app->session->setFlash('warning', "Exam Schedule not managed. Try again!");
 		} // closing of catch
 
@@ -328,13 +316,30 @@ if(isset($_POST['get_subjects'])){
 		$('#start_time'+j). prop("disabled", false);
 		$('#end_time'+j). prop("disabled", false);
 		$('#room'+j). prop("disabled", false);
+		$('#rom'+j). prop("disabled", true);
+		 $('#start'+j). prop("disabled", true);
+		 $('#end'+j). prop("disabled", true);
 		//$('#priority'+j). prop("disabled", false);
 	}
+
 	function off(k){
-		$('#start_time'+k). prop("disabled", true);
-		$('#end_time'+k). prop("disabled", true);
-		$('#room'+k). prop("disabled", true);
+		
+		 $('#start_time'+k). prop("disabled", true);
+		 	
+
+		 $('#end_time'+k). prop("disabled", true);
+		 $('#room'+k). prop("disabled", true);
+		 $('#rom'+k). prop("disabled", false);
+		 $('#start'+k). prop("disabled", false);
+		 $('#end'+k). prop("disabled", false);
+		 
+		 
+		 
+		 // document.getElementById('#start_time'+k).value = "";
+		 // document.getElementById('#start_time'+k).value = "";
+		 // document.getElementById('#room'+k).value = "";
 		//$('#priority'+k). prop("disabled", true);
 	}
+	
 	
 </script>	

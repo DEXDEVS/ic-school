@@ -146,7 +146,7 @@
                             // ['label' => 'Exams Schedule', 'icon' => 'caret-right', 'url' => ["/exams-schedule"],],
                             ['label' => 'Manage Exams', 'icon' => 'caret-right', 'url' => ["/exams-schedule/manage-exams"],],
                             // ['label' => 'Invigilator Attendance', 'icon' => 'caret-right', 'url' => ["./emp-exam-attendance"],],
-                            ['label' => 'View Marks Sheet', 'icon' => 'caret-right', 'url' => ["/view-marks-sheet "],],
+                            //['label' => 'View Marks Sheet', 'icon' => 'caret-right', 'url' => ["/view-marks-sheet "],],
                             // ['label' => 'Roll # Slip', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
                             // ['label' => 'Result Card', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
                             // ['label' => 'Quiz System', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
@@ -190,7 +190,7 @@
                                 'url' => '#',
                                 'items' => [
                                     ['label' => 'Manage Leave', 'icon' => 'chevron-right', 'url' => './emp-leave',],
-                                    ['label' => 'Leave Report', 'icon' => 'chevron-right', 'url' => './premium-version',],
+                                    ['label' => 'Leave Report', 'icon' => 'chevron-right', 'url' => './leave-index',],
                                 ],
                             ],
 
