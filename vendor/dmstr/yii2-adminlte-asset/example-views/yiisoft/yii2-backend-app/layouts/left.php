@@ -69,7 +69,7 @@
                             ['label' => 'Registration', 'icon' => 'caret-right', 'url' => ["/std-personal-info"],],
                             ['label' => 'Enrollment', 'icon' => 'caret-right', 'url' => ["/std-enrollment-head"],],
                             ['label' => 'Promotion/Demotion', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
-                            ['label' => 'ID Cards', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
+                            ['label' => 'ID Cards', 'icon' => 'caret-right', 'url' => ["./id-card-index"],],
                             ['label' => 'Attendance System', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
                             [
                                 'label' => 'Online Admission',
@@ -145,12 +145,14 @@
                             // ['label' => 'Exams Criteria', 'icon' => 'caret-right', 'url' => ["/exams-criteria"],],
                             // ['label' => 'Exams Schedule', 'icon' => 'caret-right', 'url' => ["/exams-schedule"],],
                             ['label' => 'Manage Exams', 'icon' => 'caret-right', 'url' => ["/exams-schedule/manage-exams"],],
-                            // ['label' => 'Invigilator Attendance', 'icon' => 'caret-right', 'url' => ["./emp-exam-attendance"],],
-                            //['label' => 'View Marks Sheet', 'icon' => 'caret-right', 'url' => ["/view-marks-sheet "],],
-                            // ['label' => 'Roll # Slip', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
-                            // ['label' => 'Result Card', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
-                            // ['label' => 'Quiz System', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
-                            // ['label' => 'Examination Controller', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
+
+                            ['label' => 'Invigilator Attendance', 'icon' => 'caret-right', 'url' => ["./emp-exam-attendance"],],
+                            ['label' => 'View Marks Sheet', 'icon' => 'caret-right', 'url' => ["/view-marks-sheet "],],
+                            ['label' => 'Roll # Slip', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
+                            ['label' => 'Result Card', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
+                            ['label' => 'Quiz System', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
+                            ['label' => 'Examination Controller', 'icon' => 'caret-right', 'url' => ["./premium-version"],],
+                            
                             // ['label' => 'Result cards', 'icon' => 'caret-right', 'url' => ["/view-result-cards "],],
                             
                         ],

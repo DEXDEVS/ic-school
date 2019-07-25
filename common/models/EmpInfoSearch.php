@@ -19,7 +19,7 @@ class EmpInfoSearch extends EmpInfo
     {
         return [
             [['emp_id', 'emp_branch_id', 'emp_dept_id', 'emp_passing_year', 'created_by', 'updated_by'], 'integer'],
-            [['emp_reg_no', 'emp_name', 'emp_father_name', 'emp_cnic', 'emp_contact_no', 'emp_perm_address', 'emp_temp_address', 'emp_marital_status', 'emp_gender', 'emp_photo', 'emp_salary_type', 'emp_email', 'emp_qualification', 'emp_institute_name', 'degree_scan_copy', 'emp_cv', 'emp_status', 'created_at', 'updated_at','emp_date_of_birth','emp_religion','emp_domicile','emp_designation_id'], 'safe'],
+            [['emp_reg_no', 'emp_name', 'emp_father_name', 'emp_cnic', 'emp_contact_no', 'emp_perm_address', 'emp_temp_address', 'emp_marital_status', 'emp_gender', 'emp_photo', 'emp_salary_type', 'emp_email', 'emp_qualification', 'emp_institute_name', 'degree_scan_copy', 'emp_cv', 'emp_status', 'created_at', 'updated_at','emp_date_of_birth','emp_religion','emp_domicile'], 'safe'],
         ];
     }
 
@@ -61,7 +61,6 @@ class EmpInfoSearch extends EmpInfo
                 'emp_branch_id' => $this->emp_branch_id,
                 'emp_dept_id' => $this->emp_dept_id,
                 'emp_passing_year' => $this->emp_passing_year,
-                'emp_designation_id' => $this->emp_designation_id,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
                 'created_by' => $this->created_by,
@@ -110,7 +109,6 @@ class EmpInfoSearch extends EmpInfo
                 'emp_branch_id' => $this->emp_branch_id,
                 'emp_dept_id' => $this->emp_dept_id,
                 'emp_passing_year' => $this->emp_passing_year,
-                'emp_designation_id' => $this->emp_designation_id,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
                 'created_by' => $this->created_by,

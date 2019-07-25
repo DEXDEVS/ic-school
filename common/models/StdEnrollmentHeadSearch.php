@@ -103,4 +103,69 @@ class StdEnrollmentHeadSearch extends StdEnrollmentHead
             return $dataProvider;
         }
     }
+    //search function for class ID Cards
+    public function searchIdCard($params)
+    {
+        if(Yii::$app->user->identity->user_type == 'Superadmin'){
+            $query = StdEnrollmentHead::find();
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);
+
+            $this->load($params);
+
+            if (!$this->validate()) {
+                // uncomment the following line if you do not want to return any records when validation fails
+                // $query->where('0=1');
+                return $dataProvider;
+            }
+            $query->joinWith('branch');
+            $query->andFilterWhere([
+                'std_enroll_head_id' => $this->std_enroll_head_id,
+                'class_name_id' => $this->class_name_id,
+                'session_id' => $this->session_id,
+                'section_id' => $this->section_id,
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
+            ]);
+
+            $query->andFilterWhere(['like', 'std_enroll_head_name', $this->std_enroll_head_name])
+                ->andFilterWhere(['like', 'branches.branch_name', $this->branch_id]);
+
+            return $dataProvider;
+        } else {
+            $branch_id = Yii::$app->user->identity->branch_id;
+            $query = StdEnrollmentHead::find()->where(['branch_id'=> $branch_id]);
+
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);
+
+            $this->load($params);
+
+            if (!$this->validate()) {
+                // uncomment the following line if you do not want to return any records when validation fails
+                // $query->where('0=1');
+                return $dataProvider;
+            }
+
+            $query->andFilterWhere([
+                'std_enroll_head_id' => $this->std_enroll_head_id,
+                'branch_id' =>$this->branch_id,
+                'class_name_id' => $this->class_name_id,
+                'session_id' => $this->session_id,
+                'section_id' => $this->section_id,
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at,
+                'created_by' => $this->created_by,
+                'updated_by' => $this->updated_by,
+            ]);
+
+            $query->andFilterWhere(['like', 'std_enroll_head_name', $this->std_enroll_head_name]);
+
+            return $dataProvider;
+        }
+    }
 }
