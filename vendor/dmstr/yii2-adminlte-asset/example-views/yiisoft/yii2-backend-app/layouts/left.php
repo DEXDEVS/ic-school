@@ -192,7 +192,7 @@
                                 'url' => '#',
                                 'items' => [
                                     ['label' => 'Manage Leave', 'icon' => 'chevron-right', 'url' => './emp-leave',],
-                                    ['label' => 'Leave Report', 'icon' => 'chevron-right', 'url' => './leave-index',],
+                                    ['label' => 'Leave Report', 'icon' => 'chevron-right', 'url' => './leave-report',],
                                 ],
                             ],
 

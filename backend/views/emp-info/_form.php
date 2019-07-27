@@ -211,6 +211,9 @@ use dosamigos\datetimepicker\DateTimePicker;
     </div>
     <div class="row">
         <div class="col-md-4">
+          <?= $form->field($model,'emp_allowed_leaves')->textInput() ?> 
+        </div>
+        <div class="col-md-4">
            <?= $form->field($model,'reference')->dropDownList([ 'Yes' => 'Yes', 'No' => 'No', ], 
            ['prompt' => 'Select (if any)', 'id' => 'reference']) ?> 
         </div>

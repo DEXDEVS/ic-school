@@ -51,6 +51,10 @@ class EmpLeaveController extends Controller
      * Lists all EmpLeave models.
      * @return mixed
      */
+    public function beforeAction($action) {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
      public function actionLeaveReport()
     {
        return $this->render('leave-report'); 

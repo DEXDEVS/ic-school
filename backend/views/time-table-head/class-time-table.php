@@ -11,7 +11,6 @@ use yii\helpers\ArrayHelper;
 		//print_r($teacherDetails);
 		$countTeacherDetails = count($teacherDetails);
 
-
 	?>
 	<div class="container-fluid">
 		<div class="row">
@@ -34,7 +33,7 @@ use yii\helpers\ArrayHelper;
 			<div class="col-md-12">
 				<table class="table table-bordered">
 					<thead>
-						<tr>
+						<tr> 
 							<?php 
 							$daysArray = array();
 							for ($s=0; $s <$countTeacherDetails ; $s++) { 
@@ -51,57 +50,57 @@ use yii\helpers\ArrayHelper;
 								AND th.status = 'Active'
 								AND td.subject_id = '$subjectID'")->queryAll();
 
-								
+								//print_r($daySchedule);
 								if(!empty($daySchedule)){
-									
 									foreach ($daySchedule as $key => $value) {
-										$daysArray[$s] = $value;
+										$daysArray[$s][$key] = $value;
+										print_r($daysArray[$s][$key]);
 									}
 								}
 							} //closing of $s loop 
-print_r($daySchedule);
+							
 							?>
 							<tr>
 							<!-- <th style="background-color:#849db7;color:white;text-align:center;">Days</th> -->
-							<th colspan="<?php echo $countTeacherDetails; ?>" style="text-align: center;background-color:lightgray;"><b style="background-color:#849db7;color:white;padding:10px;">Days : </b><?php echo "&nbsp;".$daysArray[0]['days']; ?></th>
+							<th colspan="<?php echo $countTeacherDetails; ?>" style="text-align: center;background-color:lightgray;"><b style="background-color:#849db7;color:white;padding:10px;">Days : </b><?php //echo "&nbsp;".$daysArray[0]['days']; ?></th>
 						</tr>
 							<?php
-							ArrayHelper::multisort($daysArray, ['priority'], [SORT_ASC]);
-							foreach ($daysArray as $key => $value) {
-								$subID = $value['subject_id'];
-								$priority = $value['priority'];
-								$classID = $value['class_id'];
+							///ArrayHelper::multisort($daysArray, ['priority'], [SORT_ASC]);
+							// foreach ($daysArray as $key => $value) {
+							// 	$subID = $value['subject_id'];
+							// 	$priority = $value['priority'];
+							// 	$classID = $value['class_id'];
 
-								$className = Yii::$app->db->createCommand("SELECT * FROM std_enrollment_head WHERE std_enroll_head_id = '$classID ' ")->queryAll();
-								$subName = Yii::$app->db->createCommand("SELECT subject_name FROM subjects WHERE subject_id = '$subID ' ")->queryAll();
-								$status = $value['status'];
-								if ($status == 1) {
+							// 	$className = Yii::$app->db->createCommand("SELECT * FROM std_enrollment_head WHERE std_enroll_head_id = '$classID ' ")->queryAll();
+							// 	$subName = Yii::$app->db->createCommand("SELECT subject_name FROM subjects WHERE subject_id = '$subID ' ")->queryAll();
+							// 	$status = $value['status'];
+							// 	if ($status == 1) {
 
 							 ?>
 							
 							<td style="text-align:center;">
 								<h4>
-									<?php echo "Lecture #: ".$priority; ?>
+									<?php //echo "Lecture #: ".$priority; ?>
 								</h4>
 								<p>
-									<?php echo "<b><u>Class : </u></b>".$className[0]['std_enroll_head_name']; ?>
+									<?php //echo "<b><u>Class : </u></b>".$className[0]['std_enroll_head_name']; ?>
 								</p>
 								<p>
 									<?php 
-									if (empty($subName[0]['subject_name'])) {
-										echo "---";
-									}
-									else{
-										echo "<b>Subject:</b> ".$subName[0]['subject_name'];
-									}
+									// if (empty($subName[0]['subject_name'])) {
+									// 	echo "---";
+									// }
+									// else{
+									// 	echo "<b>Subject:</b> ".$subName[0]['subject_name'];
+									// }
 
 									 ?>	
 								</p>
-								<p><?php echo "<b>Time :</b> ".$value['start_time']." TO ".$value['end_time'];  ?></p>
-								<p><?php echo "<b>Room.# </b>"."<span class='label label-success'>".$value['room']."</span>";  ?></p>
+								<p><?php //echo "<b>Time :</b> ".$value['start_time']." TO ".$value['end_time'];  ?></p>
+								<p><?php //echo "<b>Room.# </b>"."<span class='label label-success'>".$value['room']."</span>";  ?></p>
 							</td>
-							<?php } // closing of if to check subject status
-							} // closing if foreach loop 
+							<?php //} // closing of if to check subject status
+							//} // closing if foreach loop 
 							
 							 ?>
 						</tr>

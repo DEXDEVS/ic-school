@@ -44,7 +44,7 @@ class EmpLeave extends \yii\db\ActiveRecord
             [['no_of_days', 'created_by', 'updated_by'], 'integer'],
             [['leave_type'], 'string'],
             [['emp_id','emp_name','starting_date', 'ending_date', 'applying_date', 'created_at', 'updated_at', 'status', 'remarks', 'created_by', 'updated_by','branch_id'], 'safe'],
-            [['leave_purpose'], 'string', 'max' => 100],
+            [['leave_purpose'], 'string', 'max' => 300],
             [['status'], 'string'],
             [['remarks'], 'string', 'max' => 200],
             [['emp_id'], 'exist', 'skipOnError' => true, 'targetClass' => EmpInfo::className(), 'targetAttribute' => ['emp_id' => 'emp_id']],

@@ -47,7 +47,7 @@ class ExamsScheduleController extends Controller
         ];
     }
 
-     public function beforeAction($action) {
+    public function beforeAction($action) {
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
     }
