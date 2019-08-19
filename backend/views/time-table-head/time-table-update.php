@@ -44,7 +44,7 @@
 				</h3>
 			</div>
 		</div>
-		<form method="POST" action="time-table-update?dayId=<?php echo $dayId; ?>&classHeadID=<?php echo $classHeadID; ?>">
+		<form method="POST" action="class-time-table?classHeadID=<?php echo $classHeadID; ?>">
 			<input type="hidden" name="_csrf" class="form-control" value="<?=Yii::$app->request->getCsrfToken()?>">
 			<div class="row">
 				<div class="col-md-3">
@@ -123,6 +123,10 @@
 														echo "disabled=".true;
 													}
 												?>>
+												<input type="hidden" name="start_time[]" value="<?php echo null; ?>" id="start<?php echo $i;?>" <?php 
+													if ($status==0) {
+														echo "disabled=".false;
+													}?> >
 											</div>
 											<div class="form-group">
 												<label>Select End Time</label>
@@ -132,6 +136,7 @@
 														echo "disabled=".true;
 													}
 												?>>
+												<input type="hidden" name="end_time[]" value="<?php echo null; ?>" id="end<?php echo $i ;?>" disabled>
 											</div>
 										</div>
 										<div class="col-md-4" style="border-right:1px solid;">
@@ -143,9 +148,11 @@
 														echo "disabled=".true;
 													}
 												?>>
-													>
+													
 													<?php 
+													if($roomID != ''){
 														$room = Yii::$app->db->createCommand("SELECT room_id,room_name FROM rooms WHERE room_id = '$roomID' ")->queryAll();
+													
 														$roomId 	= $room[0]['room_id'];
 														$roomName 	= $room[0]['room_name'];
 
@@ -153,9 +160,10 @@
 														<option value="<?php echo $roomId; ?>">
 														<?php echo $roomName;  ?>
 														</option>
-													<?php 
-														
+													
+														<?php 
 														$rooms = Yii::$app->db->createCommand("SELECT room_id,room_name FROM rooms WHERE room_id != '$roomID' ")->queryAll();
+													
 														$countRooms = count($rooms);
 														for ($r=0; $r <$countRooms ; $r++) { 
 															$roomId 	= $rooms[$r]['room_id'];
@@ -165,7 +173,23 @@
 														<option value="<?php echo $roomId; ?>">
 															<?php echo $roomName;  ?>
 														</option>	
-														<<?php } ?>
+														<?php } 
+													} else {  ?>
+														<option>Select Room</option>
+													<?php
+														$rooms = Yii::$app->db->createCommand("SELECT room_id,room_name FROM rooms")->queryAll();
+													
+														$countRooms = count($rooms);
+														for ($r=0; $r <$countRooms ; $r++) { 
+															$roomId 	= $rooms[$r]['room_id'];
+															$roomName 	= $rooms[$r]['room_name'];
+
+														 ?>
+														<option value="<?php echo $roomId; ?>">
+															<?php echo $roomName;  ?>
+														</option>	
+												<?php 	}
+													}	?>
 												</select>
 											</div>
 											<div class="form-group">
@@ -184,7 +208,7 @@
 														<option value="<?php echo $pri; ?>">
 															<?php echo "Priority ".$pri; ?>
 														</option>	
-														<<?php } ?>
+														<?php } ?>
 												</select>
 											</div>
 										</div>
@@ -229,91 +253,7 @@
 		</form>
 	</div>
 	<!-- container fluid close -->
-	<?php 
-	if(isset($_POST["update_time_table"]))
-	{
-		$start_time 		= $_POST['start_time'];
-		$end_time 			= $_POST['end_time'];
-		$room 				= $_POST['room'];
-		$countDayDetails	= $_POST['countDayDetails'];
-		$subIdArray			= $_POST['subIdArray'];
-		$priority = $_POST['priority'];
-		$status = $_POST['on_off'];
-
-		$dayId = $_POST['dayId'];
-		$classHeadID = $_POST['classHeadID'];
-
-		$break_start = $_POST['break_start'];
-		$break_end = $_POST['break_end'];
-		$break_priority = $_POST['break_priority'];
-
-		//print_r($status);
-
-		 	$transection = Yii::$app->db->beginTransaction();
-		try{
-			for ($i=0; $i <$countDayDetails ; $i++) {
-				if ($status[$i] == 1) { 
-					$timeTableUpdate = Yii::$app->db->createCommand()->update('time_table_detail', [
-							'start_time' 		=> $start_time[$i],
-							'end_time' 			=> $end_time[$i],
-							'room' 				=> $room[$i],
-							'priority' 			=> $priority[$i],
-							'status' 			=> $status[$i],
-							'updated_at'		=> new \yii\db\Expression('NOW()'),
-							'updated_by'		=> Yii::$app->user->identity->id,
-	                        ],
-	                        ['time_table_h_id' => $dayId, 'subject_id' => $subIdArray[$i]]
-	                    )->execute();
-				}
-				if ($status[$i] == 0) { 
-					$timeTableUpdate = Yii::$app->db->createCommand()->update('time_table_detail', [
-							'start_time' 		=> '',
-							'end_time' 			=> '',
-							'room' 				=> '',
-							'priority' 			=> $priority[$i],
-							'status' 			=> $status[$i],
-							'updated_at'		=> new \yii\db\Expression('NOW()'),
-							'updated_by'		=> Yii::$app->user->identity->id,
-	                        ],
-	                        ['time_table_h_id' => $dayId, 'subject_id' => $subIdArray[$i]]
-	                    )->execute();
-				}
-			} //ending of $i loooooooooooooop
-			if($timeTableUpdate){
-				$timeTablebreakUpdate = Yii::$app->db->createCommand()->update('time_table_detail', [
-						'start_time' 		=> $break_start,
-						'end_time' 			=> $break_end,
-						'room' 				=> '',
-						'priority' 			=> $break_priority,
-						'status' 			=> 2,
-						'updated_at'		=> new \yii\db\Expression('NOW()'),
-						'updated_by'		=> Yii::$app->user->identity->id,
-                        ],
-                        ['time_table_h_id' => $dayId, 'subject_id' => NULL, 'room' => NULL]
-                    )->execute();
-			}
-			if($timeTablebreakUpdate) {
-				$transection->commit();
-				Yii::$app->session->setFlash('success', "Time Table updated successfully...!");
-				//return $this->redirect(['./class-time-table']);
-				//header("location: ");
-				?>
-					<script>
-						window.location='./class-time-table';
-					</script>
-				<?php
-			}
-			
-		//closing of try block
-		} catch(Exception $e){
-			$transection->rollback();
-			echo $e;
-			Yii::$app->session->setFlash('warning', "Time Table not updated. Try again!");
-		} // closing of transaction handling....
-		
-
-} //ending of if isset
-?>
+	
 </body>
 </html>
 
@@ -322,6 +262,9 @@
 		$('#start_time'+j). prop("disabled", false);
 		$('#end_time'+j). prop("disabled", false);
 		$('#room'+j). prop("disabled", false);
+		$('#rom'+j). prop("disabled", true);
+		 $('#start'+j). prop("disabled", true);
+		 $('#end'+j). prop("disabled", true);
 		//$('#priority'+j). prop("disabled", false);
 	}
 	function off(k){
@@ -329,7 +272,10 @@
 		$('#start_time'+k). prop("disabled", true);
 		$('#end_time'+k). prop("disabled", true);
 		$('#room'+k). prop("disabled", true);
-		//$('#priority'+k). prop("disabled", true);
+		$('#rom'+k). prop("disabled", false);
+		$('#start'+k). prop("disabled", false);
+		$('#end'+k). prop("disabled", false);
+		
 	}
 	
 </script>

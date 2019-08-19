@@ -5,30 +5,37 @@
  ?>
 <div class="container-fluid">
 	<form method="post" action="leave-report">
-		<input type="hidden" name="_csrf" class="form-control" value="<?=Yii::$app->request->getCsrfToken()?>"> 
-		<div class="row">
-			<div class="col-md-4">
-				<div class="form-group">
-					<label>Select Employee</label>
-					<select name="empID" class="form-control">
-						<option value="">Select Employee</option>
-						<?php 
-						for ($e=0; $e <$countEmpData ; $e++) { 
-						$empID = $empData[$e]['emp_id'];
-						$empName = Yii::$app->db->createCommand("SELECT emp_id,emp_name FROM emp_info WHERE emp_id = '$empID'")->queryAll();
-						?>
-						<option value="<?php echo $empName[0]['emp_id']; ?>">
-							<?php echo $empName[0]['emp_name']; ?>
-						</option>
-						<?php } ?>
-					</select>
+		<input type="hidden" name="_csrf" class="form-control" value="<?=Yii::$app->request->getCsrfToken()?>">
+		<div class="box box-default"> 
+			<div class="box-header">
+				<div>
+					<h3 class="well" style="border-left:2px solid;">Employee Leave Report</h3>	
 				</div>
-			</div>
-			<div class="col-md-4" style="margin-top:25px;">
-				<div class="form-group">
-					<button type="submit" name="submit" class="btn btn-success">
-						Get Leave Report
-					</button>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Select Employee</label>
+							<select name="empID" class="form-control">
+								<option value="">Select Employee</option>
+								<?php 
+								for ($e=0; $e <$countEmpData ; $e++) { 
+								$empID = $empData[$e]['emp_id'];
+								$empName = Yii::$app->db->createCommand("SELECT emp_id,emp_name FROM emp_info WHERE emp_id = '$empID'")->queryAll();
+								?>
+								<option value="<?php echo $empName[0]['emp_id']; ?>">
+									<?php echo $empName[0]['emp_name']; ?>
+								</option>
+								<?php } ?>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-4" style="margin-top:25px;">
+						<div class="form-group">
+							<button type="submit" name="submit" class="btn btn-success">
+								Get Leave Report
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
