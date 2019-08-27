@@ -383,8 +383,6 @@ if(isset($_POST['get_subjects'])){
 	function off(k){
 		
 		 $('#start_time'+k). prop("disabled", true);
-		 	
-
 		 $('#end_time'+k). prop("disabled", true);
 		 $('#room'+k). prop("disabled", true);
 		 $('#rom'+k). prop("disabled", false);
@@ -398,6 +396,4 @@ if(isset($_POST['get_subjects'])){
 		 // document.getElementById('#room'+k).value = "";
 		//$('#priority'+k). prop("disabled", true);
 	}
-	
-	
 </script>	
